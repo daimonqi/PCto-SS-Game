@@ -1,0 +1,227 @@
+:root {
+  --font-family-base: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: #101017;
+  font-family: var(--font-family-base);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  gap: 50px;
+}
+
+/* === 基础容器定位 === */
+.card {
+  width: 274px;
+  height: 238px;
+  position: relative;
+  cursor: pointer;
+}
+
+/* 1. 外围环境光边框层 */
+.card-outline {
+  position: absolute;
+  inset: -12px;
+  background: rgba(255,255,255,0.05);
+  border: 0.5px solid rgba(255,255,255,0.2);
+  border-radius: 6px;
+  pointer-events: none;
+  
+  opacity: 0;
+  transform: scale(0.96) translateY(5px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 0;
+}
+
+/* 2. 真正的环境光底板 (核心原理：将一张相同的图片极限模糊，让高光色渗透到阴影区) */
+.ambient-sys {
+  position: absolute; 
+  inset: 0; 
+  z-index: 1; 
+  border-radius: 4px; 
+  overflow: hidden;
+  /* 给底板铺一点极暗的底色防止图片加载前露白 */
+  background: #111; 
+}
+
+.ambient-sys img { 
+  width: 100%; height: 100%; 
+  object-fit: cover; 
+  /* 放大 1.25 倍避免高斯模糊把边缘发白 */
+  transform: scale(1.25); 
+  /* 直接对图片像素进行巨量混合模糊！这是环境光溢出到黑区的关键 */
+  filter: blur(36px) saturate(1.2); 
+}
+
+/* 环境光上的一层微弱压光，确保白色文字的对比度绝对安全 */
+.ambient-sys .overlay {
+  position: absolute; inset: 0;
+  background: rgba(0,0,0,0.15);
+}
+
+/* 3. 在底层环境光之上的切割排版区 */
+.card-content {
+  position: absolute; inset: 0; z-index: 2;
+  border-radius: 4px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+
+/* 上半部：一刀切的清晰底图 */
+.img-container {
+  position: relative;
+  width: 100%;
+  height: calc(100% - 86px); 
+  overflow: hidden;
+  transform: translate3d(0,0,0);
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 3;
+}
+
+.cover-img {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* 下半部：完全镂空，只赋予半透明黑和表面磨砂，让底层环境光大放异彩 */
+.bottom-container {
+  position: relative;
+  width: 100%;
+  height: 86px; 
+  padding: 16px;
+  display: flex; flex-direction: column;
+  gap: 12px;
+  z-index: 3;
+  
+  /* 背景色设置得很透，主打露出下方的巨大模糊色块 */
+  background: rgba(0,0,0,0.3); 
+  
+  /* 表面增加一层细微的硬毛玻璃，增加界面的现代晶格感 */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+              background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: height, background;
+}
+
+/* === 【悬浮交互触发】 === */
+.card:hover .card-outline {
+  opacity: 1; 
+  transform: scale(1) translateY(0);
+}
+.card:hover .img-container {
+  height: calc(100% - 102px); 
+}
+.card:hover .cover-img {
+  transform: scale(1.1); 
+}
+.card:hover .bottom-container {
+  height: 102px; 
+  background: rgba(0,0,0,0.45); /* 悬浮时稍稍暗一点，衬托按钮 */
+}
+
+/* === 排版与内容 === */
+.text-title {
+  font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.9);
+  line-height: 22px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  flex: 1; 
+}
+
+.text-time {
+  font-size: 14px; color: rgba(255,255,255,0.6); 
+  display: flex; align-items: center; gap: 4px;
+}
+.icon-clock {
+  width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.5; border-radius: 50%;
+}
+
+.dynamic-right {
+  position: relative;
+  height: 20px; 
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.card:hover .dynamic-right {
+  height: 36px; 
+}
+
+.text-value {
+  font-size: 14px; color: rgba(255,255,255,0.6);
+  position: absolute; right: 0;
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.card:hover .text-value {
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+.btn-primary {
+  position: absolute; right: 0;
+  width: 88px; height: 36px; border-radius: 4px; 
+  --btn-h: 36px;
+  border: none;
+  font-size: 16px; font-weight: 700; 
+  color: #ffe1bd; /* Peach-orange tint from design */
+  cursor: pointer; display: flex; justify-content: center; align-items: center;
+  
+  /* Text Wrapping Rules: single line, clip overflowing words precisely rather than dot-dot-dot */
+  white-space: nowrap;
+  overflow: hidden; 
+  text-overflow: clip; 
+
+  /* Use pure percentages (50% horizontal) to ensure the ellipse stays perfectly inscribed without overflowing or breaking CSS */
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(255, 114, 16, 0.3) 0%, rgba(153, 68, 10, 0) 100%), rgba(255, 114, 16, 0.01);
+  box-shadow: inset 0px 2px 4px 0px rgba(255, 114, 16, 0.15); /* Top-only faint inner fill */
+  
+  opacity: 0;
+  transform: translateY(10px) scale(0.95);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition-delay: 0.05s; 
+}
+/* Crisp 0.5px inner stroke (Inside 0.5 matches Figma) fading to invisibility */
+.btn-primary::after {
+  content: ''; position: absolute; inset: 0; padding: 0.5px; border-radius: inherit;
+  background: 
+    radial-gradient(ellipse 30px 2px at 50% 0%, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, rgba(255, 223, 201, 0.5) 0%, rgba(255, 223, 201, 0.3) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+}
+.card:hover .btn-primary {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.btn-primary:hover {
+  /* Expand the sphere slightly and brighten */
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(255, 114, 16, 0.45) 0%, rgba(153, 68, 10, 0) 100%), rgba(255, 114, 16, 0.02);
+}
+.btn-primary:active {
+  color: rgba(255, 225, 189, 0.7);
+  /* Contract the sphere */
+  background: radial-gradient(ellipse 50% 100% at 50% 0%, rgba(255, 114, 16, 0.12) 0%, rgba(153, 68, 10, 0) 100%), rgba(255, 114, 16, 0.01);
+}
+
+.btn-primary:active::after {
+  background: 
+    radial-gradient(ellipse 30px 2px at 50% 0%, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, rgba(255, 223, 201, 0.3) 0%, rgba(255, 223, 201, 0.02) 100%);
+}

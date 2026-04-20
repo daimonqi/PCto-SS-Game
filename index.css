@@ -1,0 +1,136 @@
+/* f:\aiUI\index.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+
+:root {
+  /* 1.1 品牌橙主色矩阵 (Brand Primary) */
+  --primary-0-alpha: rgba(255, 114, 16, 0.3); /* 30% 发光/底垫 */
+  --primary-1: #FFF5E8;
+  --primary-5: #FF933B;
+  --primary-6: #FF7210; /* 主色 */
+  --primary-7: #D2570A;
+  --primary-10: #723307;
+
+  /* 1.2 暗黑空间背景层控矩阵 */
+  --color-background: #101017;
+  --color-bg-dialog: #2B2B36;
+  
+  /* 1.3 文本颜色与交互层控矩阵 */
+  --color-text-bright: #FFFFFFFF;   /* 100% 纯白 */
+  --color-text-primary: #FFFFFFCC;  /* 80% 常规正文 */
+  --color-text-secondary: #FFFFFF99; /* 60% 次级补充文本 */
+  --color-text-tertiary: #FFFFFF66; /* 40% 极弱说明占位 */
+  --color-text-ghost: #FFFFFF33;    /* 20% 底层幽灵无声字 */
+
+  /* 功能链接 */
+  --color-link-blue: #409EFF;
+  --color-link-blue-hover: #66B1FF;
+
+  /* 全局字体池 - 约束使用 Microsoft YaHei UI */
+  --font-family-base: "Microsoft YaHei UI", "Microsoft YaHei", -apple-system, sans-serif;
+}
+
+/* 全局基座 */
+body {
+  margin: 0;
+  padding: 40px;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ==================================================
+   2. 排版层级结构 (Typography Scale)
+   ================================================== */
+.text-display { font-size: 24px; font-weight: 700; line-height: 1.33; color: var(--color-text-bright); }
+.text-2xl     { font-size: 20px; font-weight: 700; line-height: 1.4;  color: var(--color-text-bright); }
+.text-xl      { font-size: 18px; font-weight: 700; line-height: 1.33; color: var(--color-text-primary); }
+.text-xl-dark { font-size: 18px; font-weight: 700; line-height: 1.33; color: var(--color-text-secondary); }
+.text-lg      { font-size: 16px; font-weight: 700; line-height: 1.375;color: var(--color-text-primary); }
+.text-base    { font-size: 15px; font-weight: 400; line-height: 1.5;  color: var(--color-text-primary); }
+.text-base-strong{ font-size: 15px; font-weight: 700; line-height: 1.5;color: var(--color-text-primary); }
+.text-sm      { font-size: 14px; font-weight: 400; line-height: 1.428;color: var(--color-text-secondary); }
+.text-sm-bold { font-size: 14px; font-weight: 700; line-height: 1.428;color: var(--color-text-bright); }
+.text-xs      { font-size: 13px; font-weight: 400; line-height: 1.38; color: var(--color-text-secondary); }
+.text-2xs     { font-size: 12px; font-weight: 700; line-height: 1.0;  color: var(--color-text-tertiary); }
+
+/* ==================================================
+   3. 组件与交互状态规范 (Hover & Interactions)
+   ================================================== */
+/* A. 常规内部操作 Icon/Text：层级跃升演示 */
+.icon-action {
+  color: var(--color-text-secondary); /* Default: 60%白 */
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  user-select: none;
+}
+.icon-action:hover {
+  color: var(--color-text-bright); /* Hover: 提亮至 100%或80%白 */
+  background-color: rgba(255, 255, 255, 0.08); /* 极微弱底垫磁贴效应 */
+}
+.icon-action:active {
+  color: var(--color-text-tertiary); /* Pressed: 下沉削弱至 40%白 */
+  background-color: transparent;
+}
+
+/* B. 强跳出/功能性跳转链接：主色或功能色突变 */
+.nav-jump-action {
+  color: var(--color-text-primary); /* Default 保持整体克制 */
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  user-select: none;
+}
+.nav-jump-action:hover {
+  color: var(--primary-6); /* Hover 爆发主橙色跳出警示 */
+}
+
+/* C. 外链蓝协议 */
+.nav-jump-external {
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.nav-jump-external:hover {
+  color: var(--color-link-blue-hover);
+  text-decoration: underline;
+}
+
+/* 面板类容器底盘样式 */
+.card-surface {
+  background-color: var(--color-bg-dialog);
+  border-radius: 12px;
+  padding: 24px;
+  border: 1px solid rgba(255,255,255,0.05); /* 提升质感的微弱边界反光 */
+}
+
+/* 独立的主体动作按钮基模版 */
+.btn-primary {
+  background-color: var(--primary-6);
+  color: var(--color-text-bright);
+  font-weight: 700;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-size: 15px;
+}
+.btn-primary:hover {
+  background-color: var(--primary-5); /* Hover 提亮至 primary-5 */
+  box-shadow: 0 4px 14px var(--primary-0-alpha); /* 弥散光效 */
+  transform: translateY(-1px);
+}
+.btn-primary:active {
+  background-color: var(--primary-7); /* Pressed 按下变暗至 primary-7 */
+  box-shadow: none;
+  transform: translateY(0);
+}

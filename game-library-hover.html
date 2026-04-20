@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PC 233 乐园 - 完美玻璃磨砂渲染</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #474747; 
+      font-family: 'Microsoft YaHei UI', 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      gap: 50px;
+    }
+
+    /* === 基础容器定位 === */
+    .card {
+      width: 274px;
+      height: 238px;
+      position: relative;
+      cursor: pointer;
+    }
+
+    /* 1. 外围环境光边框层 */
+    .card-outline {
+      position: absolute;
+      inset: -12px;
+      background: rgba(255,255,255,0.05);
+      border: 0.5px solid rgba(255,255,255,0.2);
+      border-radius: 6px;
+      pointer-events: none;
+      
+      opacity: 0;
+      transform: scale(0.96) translateY(5px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 0;
+    }
+
+    /* 2. 真正的环境光底板 (核心原理：将一张相同的图片极限模糊，让高光色渗透到阴影区) */
+    .ambient-sys {
+      position: absolute; 
+      inset: 0; 
+      z-index: 1; 
+      border-radius: 4px; 
+      overflow: hidden;
+      /* 给底板铺一点极暗的底色防止图片加载前露白 */
+      background: #111; 
+    }
+    
+    .ambient-sys img { 
+      width: 100%; height: 100%; 
+      object-fit: cover; 
+      /* 放大 1.25 倍避免高斯模糊把边缘发白 */
+      transform: scale(1.25); 
+      /* 直接对图片像素进行巨量混合模糊！这是环境光溢出到黑区的关键 */
+      filter: blur(36px) saturate(1.2); 
+    }
+
+    /* 环境光上的一层微弱压光，确保白色文字的对比度绝对安全 */
+    .ambient-sys .overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.15);
+    }
+
+    /* 3. 在底层环境光之上的切割排版区 */
+    .card-content {
+      position: absolute; inset: 0; z-index: 2;
+      border-radius: 4px; overflow: hidden;
+      display: flex; flex-direction: column;
+    }
+
+    /* 上半部：一刀切的清晰底图 */
+    .img-container {
+      position: relative;
+      width: 100%;
+      height: calc(100% - 86px); 
+      overflow: hidden;
+      transform: translate3d(0,0,0);
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 3;
+    }
+    
+    .cover-img {
+      position: absolute;
+      inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transform: scale(1);
+      transition: transform 0.5s cubic-bezier(0.2, 1, 0.3, 1);
+      will-change: transform;
+    }
+
+    /* 下半部：完全镂空，只赋予半透明黑和表面磨砂，让底层环境光大放异彩 */
+    .bottom-container {
+      position: relative;
+      width: 100%;
+      height: 86px; 
+      padding: 16px;
+      display: flex; flex-direction: column;
+      gap: 12px;
+      z-index: 3;
+      
+      /* 背景色设置得很透，主打露出下方的巨大模糊色块 */
+      background: rgba(0,0,0,0.3); 
+      
+      /* 表面增加一层细微的硬毛玻璃，增加界面的现代晶格感 */
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1), 
+                  background 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: height, background;
+    }
+
+    /* === 【悬浮交互触发】 === */
+    .card:hover .card-outline {
+      opacity: 1; 
+      transform: scale(1) translateY(0);
+    }
+    .card:hover .img-container {
+      height: calc(100% - 102px); 
+    }
+    .card:hover .cover-img {
+      transform: scale(1.1); 
+    }
+    .card:hover .bottom-container {
+      height: 102px; 
+      background: rgba(0,0,0,0.45); /* 悬浮时稍稍暗一点，衬托按钮 */
+    }
+
+    /* === 排版与内容 === */
+    .text-title {
+      font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.9);
+      line-height: 22px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    
+    .info-row {
+      display: flex; justify-content: space-between; align-items: center;
+      flex: 1; 
+    }
+
+    .text-time {
+      font-size: 14px; color: rgba(255,255,255,0.6); 
+      display: flex; align-items: center; gap: 4px;
+    }
+    .icon-clock {
+      width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.5; border-radius: 50%;
+    }
+
+    .dynamic-right {
+      position: relative;
+      height: 20px; 
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      transition: height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .card:hover .dynamic-right {
+      height: 36px; 
+    }
+
+    .text-value {
+      font-size: 14px; color: rgba(255,255,255,0.6);
+      position: absolute; right: 0;
+      opacity: 1;
+      transform: translateY(0);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .card:hover .text-value {
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+    }
+
+    .btn-primary {
+      position: absolute; right: 0;
+      width: 88px; height: 36px; border-radius: 4px; border: none;
+      font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.9);
+      cursor: pointer; display: flex; justify-content: center; align-items: center;
+      background: radial-gradient(100% 200% at 50% 0%, rgba(255,114,16,0.75) 0%, rgba(166,61,5,0) 100%), rgba(166,61,5,0.7);
+      box-shadow: 0px 12px 24px 0px rgba(166,61,5,0.4), inset 0px 0px 9px 0px rgba(255,114,16,0.1);
+      
+      opacity: 0;
+      transform: translateY(10px) scale(0.95);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: 0.05s; 
+    }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0; padding: 0.5px; border-radius: 4px;
+      background: linear-gradient(180deg, rgba(255,245,232,0.8), rgba(255,223,201,0.2));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude; pointer-events: none;
+    }
+    .card:hover .btn-primary {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    .btn-primary:hover {
+      color: #fff;
+      background: radial-gradient(100% 200% at 50% 0%, rgba(255,114,16,0.9) 0%, rgba(166,61,5,0) 100%), rgba(166,61,5,0.9);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ===============================
+       卡片 1 - 打工生活模拟器
+  ================================ -->
+  <article class="card">
+    <div class="card-outline"></div>
+
+    <div class="ambient-sys">
+      <img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=600&auto=format&fit=crop" alt="bg">
+      <div class="overlay"></div>
+    </div>
+
+    <div class="card-content">
+      <div class="img-container">
+        <img src="https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=600&auto=format&fit=crop" alt="cover" class="cover-img">
+      </div>
+      
+      <div class="bottom-container">
+        <div class="text-title">打工生活模拟器</div>
+        <div class="info-row">
+          <div class="text-time"><svg class="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>10小时前玩过</div>
+          <div class="dynamic-right">
+            <div class="text-value">100.9h</div>
+            <button class="btn-primary">启动</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- ===============================
+       卡片 2 - 梦境护卫队
+  ================================ -->
+  <article class="card">
+    <div class="card-outline"></div>
+
+    <div class="ambient-sys">
+      <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop" alt="bg">
+      <div class="overlay"></div>
+    </div>
+
+    <div class="card-content">
+      <div class="img-container">
+        <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop" alt="cover" class="cover-img">
+      </div>
+      
+      <div class="bottom-container">
+        <div class="text-title">梦境护卫队-注册送300乐币</div>
+        <div class="info-row">
+          <div class="text-time"><svg class="icon-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>10小时前玩过</div>
+          <div class="dynamic-right">
+            <div class="text-value">100.9h</div>
+            <button class="btn-primary">启动</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+
+</body>
+</html>

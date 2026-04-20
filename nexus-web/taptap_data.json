@@ -1,0 +1,55 @@
+{
+  "dom": {
+    "games": [
+      {
+        "title": "Rainbow Six Mobile",
+        "image": "https://img.tapimg.net/market/images/ff5c3665c4fbe7f68feff3ab190323f9.png",
+        "tags": [],
+        "isLarge": true
+      },
+      {
+        "title": "Night of the Extinct",
+        "image": "https://img.tapimg.net/market/images/98e59c35c2c2a190f7d57bb57485cb71.png?imageView2/0/w/360/h/203/format/jpg/interlace/1/ignore-error/1&t=1",
+        "tags": [
+          "Action",
+          "Action"
+        ],
+        "isLarge": false
+      },
+      {
+        "title": "HEAVENHELLS: Anime Squad RPG",
+        "image": "https://img.tapimg.net/market/images/b159614609daf88f179354f1dceb49f2.png?imageView2/0/w/360/h/203/format/jpg/interlace/1/ignore-error/1&t=1",
+        "tags": [
+          "RPG\nSimulation",
+          "RPG",
+          "Simulation"
+        ],
+        "isLarge": false
+      },
+      {
+        "title": "Where Winds Meet",
+        "image": "https://img.tapimg.net/market/images/9440224e4b45116968d93fa4ebc44ab8.jpg?imageView2/0/w/360/h/203/format/jpg/interlace/1/ignore-error/1&t=1",
+        "tags": [
+          "Editors' Choice\nRPG",
+          "Editors' Choice",
+          "RPG",
+          "Action"
+        ],
+        "isLarge": false
+      },
+      {
+        "title": "Heartopia",
+        "image": "https://img.tapimg.net/market/images/bb9c6714cfb01e14df13909fc472536d.jpg?imageView2/0/w/360/h/203/format/jpg/interlace/1/ignore-error/1&t=1",
+        "tags": [
+          "Simulation\nCasual",
+          "Simulation",
+          "Casual",
+          "Editors' Choice"
+        ],
+        "isLarge": false
+      }
+    ],
+    "banners": [],
+    "nextDataGames": []
+  }
+}

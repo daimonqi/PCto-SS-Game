@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>图片取色 · PC 233 卡片风格</title>
+  <meta name="description" content="PC 233乐园风格游戏卡片 - 图片主色径向渐变背景">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0e;
+      --card-bg: #111116;
+      --text-100: rgba(255,255,255,1);
+      --text-80: rgba(255,255,255,0.80);
+      --text-60: rgba(255,255,255,0.60);
+      --text-40: rgba(255,255,255,0.40);
+      --text-25: rgba(255,255,255,0.25);
+      --border: rgba(255,255,255,0.10);
+      --radius: 4px;
+      --spacing: 16px;
+    }
+
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-100);
+      font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      padding: 52px 40px 100px;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+    }
+
+    .header__eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-40);
+      margin-bottom: 16px;
+    }
+
+    .header__eyebrow::before {
+      content: '';
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: #f97316;
+      box-shadow: 0 0 6px #f97316;
+    }
+
+    .header h1 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--text-100);
+      margin-bottom: 10px;
+    }
+
+    .header p {
+      font-size: 0.88rem;
+      color: var(--text-60);
+      max-width: 400px;
+      margin: 0 auto 28px;
+      line-height: 1.6;
+    }
+
+    /* ── Controls ── */
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 44px;
+    }
+
+    .ctrl-pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border);
+    }
+
+    .ctrl-pill label {
+      font-size: 0.76rem;
+      color: var(--text-40);
+      white-space: nowrap;
+    }
+
+    .ctrl-pill input[type=range] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 88px; height: 2px;
+      border-radius: 1px;
+      background: rgba(255,255,255,0.12);
+      outline: none;
+      cursor: pointer;
+    }
+    .ctrl-pill input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      background: #f97316;
+      box-shadow: 0 0 5px rgba(249,115,22,0.6);
+      cursor: pointer;
+    }
+
+    .ctrl-val {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--text-60);
+      min-width: 30px;
+      text-align: right;
+    }
+
+    .btn-refresh {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 20px;
+      border-radius: 100px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--border);
+      color: var(--text-80);
+      font-size: 0.83rem;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.2s;
+      outline: none;
+    }
+    .btn-refresh:hover { background: rgba(255,255,255,0.09); }
+    .btn-refresh svg { transition: transform 0.5s; }
+    .btn-refresh.spinning svg { animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Cards Grid ── */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+
+    /* ── Card ── */
+    .card {
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s cubic-bezier(0.22,1,0.36,1),
+                  border-color 0.4s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+    }
+
+    /* ── Image ── */
+    .card__cover {
+      position: relative;
+      height: 190px;
+      overflow: hidden;
+      background: #0d0d11;
+      flex-shrink: 0;
+    }
+
+    .card__cover img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      opacity: 0;
+      transition: opacity 0.45s ease, transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    }
+    .card__cover img.loaded { opacity: 1; }
+    .card:hover .card__cover img { transform: scale(1.03); }
+
+    .card__skeleton {
+      position: absolute; inset: 0;
+      background: linear-gradient(90deg, #111116 25%, #18181e 50%, #111116 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Score badge */
+    .card__score {
+      position: absolute;
+      top: 8px; right: 8px;
+      padding: 3px 8px;
+      border-radius: var(--radius);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      font-size: 0.73rem;
+      font-weight: 600;
+      color: var(--text-100);
+      border: 1px solid rgba(255,255,255,0.12);
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+
+
+
+    /* ── Body ── */
+    .card__body {
+      position: relative;
+      padding: 14px 16px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      /* background set by JS (extracted dark color) */
+    }
+
+    /* THE MAIN EFFECT: radial gradient color layer */
+    .card__color-layer {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      /* set by JS */
+      background: transparent;
+      transition: background 0.5s ease;
+    }
+
+    /* All body children sit ABOVE the color layer — exclude the layer itself */
+    .card__body > *:not(.card__color-layer) { position: relative; z-index: 1; }
+
+    .card__title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-100);
+      line-height: 1.3;
+      letter-spacing: -0.01em;
+    }
+
+    .card__date {
+      font-size: 0.72rem;
+      color: var(--text-60);
+      margin-top: -4px;
+    }
+
+    /* Outlined genre tags — key PC233 visual */
+    .card__tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .card__tag {
+      padding: 4px 10px;
+      border-radius: var(--radius);
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: var(--text-80);
+      border: 1px solid rgba(255,255,255,0.22);
+      background: transparent;
+      transition: border-color 0.4s, color 0.4s;
+      white-space: nowrap;
+    }
+
+
+    .card__desc {
+      font-size: 0.79rem;
+      color: var(--text-60);
+      line-height: 1.55;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      flex: 1;
+    }
+
+
+    /* ── Palette slots ── */
+    .card__palette {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .swatch {
+      width: 16px; height: 16px;
+      border-radius: 50%;
+      border: 2px solid var(--card-bg);
+      margin-right: -5px;
+      flex-shrink: 0;
+      transition: transform 0.18s, margin 0.2s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.5);
+      cursor: pointer;
+    }
+    .card__palette:hover .swatch { margin-right: 3px; }
+    .swatch:hover { transform: scale(1.3) translateY(-2px); z-index: 4; }
+
+    .palette-hint {
+      margin-left: auto;
+      font-size: 0.65rem;
+      color: var(--text-25);
+    }
+
+    /* ── Tooltip ── */
+    .tooltip {
+      position: fixed;
+      padding: 4px 10px;
+      border-radius: 5px;
+      font-size: 0.74rem;
+      font-weight: 500;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(4px);
+      transition: opacity 0.12s, transform 0.12s;
+      z-index: 9999;
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .tooltip.show { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <div style="max-width:1060px;margin:0 auto">
+
+    <header class="header">
+      <div class="header__eyebrow">Canvas API · 图片取色</div>
+      <h1>PC 233乐园 · 卡片风格</h1>
+      <p>从封面提取主色，应用为卡片信息区径向渐变背景<br>标签 · 发行日期 · 预约按钮 对应 Figma 设计规范</p>
+      <button class="btn-refresh" id="btnRefresh" onclick="loadNew()">
+        <svg width="13" height="13" viewBox="0 0 15 15" fill="none">
+          <path d="M1.5 7.5C1.5 4.186 4.186 1.5 7.5 1.5a6 6 0 0 1 5.196 3H10.5a.75.75 0 0 0 0 1.5h3.75V2.25a.75.75 0 0 0-1.5 0v1.54A7.5 7.5 0 1 0 15 7.5a.75.75 0 0 0-1.5 0A6 6 0 0 1 1.5 7.5Z" fill="currentColor"/>
+        </svg>
+        换一批封面
+      </button>
+    </header>
+
+    <!-- Controls -->
+    <div class="controls">
+      <div class="ctrl-pill">
+        <label>渐变透明度</label>
+        <input type="range" id="sliderOpacity" min="0" max="60" value="28" oninput="onSlider()">
+        <span class="ctrl-val" id="valOpacity">28%</span>
+      </div>
+      <div class="ctrl-pill">
+        <label>HSB 明度压暗</label>
+        <input type="range" id="sliderBright" min="10" max="100" value="50" oninput="onSlider()">
+        <span class="ctrl-val" id="valBright">50%</span>
+      </div>
+    </div>
+
+    <main class="grid" id="grid"></main>
+  </div>
+
+  <div class="tooltip" id="tip"></div>
+
+  <script>
+    const CARDS = [
+      {
+        title: 'Resident Evil Requiem',
+        date: '2026年5月20日',
+        desc: '予生者恐惧，给亡者安魂——生化危机系列全新篇章，背水一战的生存恐怖',
+        tags: ['独家', '第三人称', '恐怖'],
+        score: '9.2'
+      },
+      {
+        title: '检疫区：最后一站',
+        date: '2026年4月15日',
+        desc: '在一座濒临崩溃的城市里指挥检查站，筛查幸存者，维持秩序直到援军到来',
+        tags: ['开放世界', '角色扮演'],
+        score: '9.2'
+      },
+      {
+        title: '荒野大镖客',
+        date: '已发售',
+        desc: '在广袤的美国西部，体验一段关于荣耀与救赎的史诗传奇，开放世界经典之作',
+        tags: ['动作冒险', '开放世界'],
+        score: '9.8'
+      },
+      {
+        title: 'HADES II',
+        date: '2026年6月1日',
+        desc: '斯提克斯女神踏上无尽征途，与时间泰坦展开史诗对决，Rogue-like 新标杆',
+        tags: ['俯视角', 'Rogue-like'],
+        score: '9.5'
+      },
+      {
+        title: '赛博朋克 2077',
+        date: '已发售',
+        desc: '夜之城，一个痴迷于权力、魅力与改造身体的大都市，V 的传奇在霓虹灯下展开',
+        tags: ['角色扮演', '开放世界'],
+        score: '8.9'
+      },
+      {
+        title: '怪物猎人 荒野',
+        date: '2026年3月28日',
+        desc: '踏入充满危险与奇迹的未知荒野，追猎巨大怪物，共创属于你的狩猎传说',
+        tags: ['动作', '合作'],
+        score: '9.1'
+      },
+    ];
+
+    const SEEDS = [
+      ['cyberpunk','horror','western','fantasy','neon','monster'],
+      ['forest','ocean','desert','space','city','mountain'],
+      ['fire','ice','storm','night','dawn','fog'],
+      ['action','anime','scifi','dark','bright','abstract'],
+    ];
+
+    let setIdx = 0;
+    let CFG = { opacity: 0.28, bright: 0.50 };
+    const cardPalettes = [];
+
+    function onSlider() {
+      const op = parseInt(document.getElementById('sliderOpacity').value);
+      const br = parseInt(document.getElementById('sliderBright').value);
+      document.getElementById('valOpacity').textContent = op + '%';
+      document.getElementById('valBright').textContent = br + '%';
+      CFG.opacity = op / 100;
+      CFG.bright  = br / 100;
+      document.querySelectorAll('.card').forEach((card, i) => {
+        if (cardPalettes[i]) paint(card, cardPalettes[i]);
+      });
+    }
+
+    // ── HSB helpers ────────────────────────────────
+    function rgbToHsb(r, g, b) {
+      r /= 255; g /= 255; b /= 255;
+      const max = Math.max(r,g,b), min = Math.min(r,g,b), d = max - min;
+      let h = 0;
+      if (d > 0) {
+        if      (max===r) h = ((g-b)/d+6)%6;
+        else if (max===g) h = (b-r)/d+2;
+        else              h = (r-g)/d+4;
+        h *= 60;
+      }
+      return { h, s: max===0?0:d/max, b: max };
+    }
+
+    function hsbToRgb(h, s, bv) {
+      const c=bv*s, x=c*(1-Math.abs((h/60)%2-1)), m=bv-c;
+      let r=0,g=0,b=0;
+      if      (h<60)  {r=c;g=x;}
+      else if (h<120) {r=x;g=c;}
+      else if (h<180) {g=c;b=x;}
+      else if (h<240) {g=x;b=c;}
+      else if (h<300) {r=x;b=c;}
+      else            {r=c;b=x;}
+      return [Math.round((r+m)*255),Math.round((g+m)*255),Math.round((b+m)*255)];
+    }
+
+    function dimColor([r,g,b]) {
+      const hsb = rgbToHsb(r,g,b);
+      return hsbToRgb(hsb.h, hsb.s, hsb.b * CFG.bright);
+    }
+
+    // ── Color extraction ────────────────────────────
+    function extractPalette(img, n=6) {
+      const cv = document.createElement('canvas');
+      cv.width = cv.height = 80;
+      const cx = cv.getContext('2d');
+      try {
+        cx.drawImage(img,0,0,80,80);
+        const d = cx.getImageData(0,0,80,80).data;
+        const step=26, buckets={};
+        for (let i=0;i<d.length;i+=4) {
+          if (d[i+3]<100) continue;
+          const lum=0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+          if (lum<18||lum>238) continue;
+          const k=`${Math.round(d[i]/step)*step},${Math.round(d[i+1]/step)*step},${Math.round(d[i+2]/step)*step}`;
+          buckets[k]=(buckets[k]||0)+1;
+        }
+        const sorted=Object.entries(buckets).sort((a,b)=>b[1]-a[1]);
+        if (!sorted.length) return fallback();
+        const pal=[];
+        for (const [k] of sorted) {
+          const c=k.split(',').map(Number);
+          if (!pal.some(p=>Math.abs(c[0]-p[0])<step*2&&Math.abs(c[1]-p[1])<step*2&&Math.abs(c[2]-p[2])<step*2))
+            pal.push(c);
+          if (pal.length>=n) break;
+        }
+        while (pal.length<n) pal.push(pal[0]||[100,80,200]);
+        return pal;
+      } catch { return fallback(); }
+    }
+
+    function fallback() {
+      return [[120,80,200],[60,140,220],[200,80,120],[80,180,140],[220,140,60],[140,100,200]];
+    }
+
+    function vibrant(pal) {
+      let best=pal[0], bs=-1;
+      for (const [r,g,b] of pal) {
+        const mx=Math.max(r,g,b),mn=Math.min(r,g,b);
+        const sat=mx===0?0:(mx-mn)/mx;
+        const lu=(0.299*r+0.587*g+0.114*b)/255;
+        const sc=sat*(lu>0.08&&lu<0.92?1:0.35);
+        if (sc>bs){bs=sc;best=[r,g,b];}
+      }
+      return best;
+    }
+
+    const toHex = ([r,g,b]) => '#'+[r,g,b].map(v=>v.toString(16).padStart(2,'0')).join('');
+    const rgba  = ([r,g,b],a) => `rgba(${r},${g},${b},${a})`;
+
+    // ── Paint card with extracted colors ────────────
+    function paint(card, pal) {
+      const vib    = vibrant(pal);
+      const dimmed = dimColor(vib);
+      const [r,g,b] = dimmed;
+
+      // Card border tint
+      card.style.borderColor = rgba(dimmed, 0.30);
+
+      const dr=Math.round(r*0.15), dg=Math.round(g*0.15), db=Math.round(b*0.15);
+
+      // Radial gradient color layer (inside the card body)
+      const op=CFG.opacity, op2=op*0.35;
+      card.querySelector('.card__color-layer').style.background = `radial-gradient(
+        ellipse at 50% 0%,
+        ${rgba(dimmed,op)}  0%,
+        ${rgba(dimmed,op2)} 45%,
+        ${rgba(dimmed,0)}   100%
+      )`;
+
+      // Card body base (very dark extracted color)
+      card.querySelector('.card__body').style.background =
+        `rgb(${dr},${dg},${db})`;
+
+      // First tag: subtle vibrant tint (not filled, just border color)
+      const t0 = card.querySelector('.card__tag--vibrant');
+      if (t0) {
+        t0.style.borderColor = rgba(vib, 0.5);
+        t0.style.color = rgba(vib, 1);
+      }
+
+      // Swatches
+      pal.slice(0,5).forEach((c,i) => {
+        const s = card.querySelectorAll('.swatch')[i];
+        if (!s) return;
+        s.style.background = `rgb(${c[0]},${c[1]},${c[2]})`;
+        s.dataset.hex = toHex(c);
+        s.style.borderColor = `rgb(${dr},${dg},${db})`;
+      });
+    }
+
+    // ── Build card ────────────────────────────────
+    function makeCard(meta, seed) {
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="card__cover">
+          <div class="card__skeleton"></div>
+          <img crossorigin="anonymous" alt="${meta.title}">
+          <div class="card__score">★ ${meta.score}</div>
+        </div>
+        <div class="card__body">
+          <div class="card__color-layer"></div>
+          <h2 class="card__title">${meta.title}</h2>
+          <div class="card__date">发行日期：${meta.date}</div>
+          <div class="card__tags">
+            ${meta.tags.map((t,i)=>`<span class="card__tag${i===0?' card__tag--vibrant':''}">${t}</span>`).join('')}
+          </div>
+          <p class="card__desc">${meta.desc}</p>
+          <div class="card__palette">
+            <div class="swatch"></div><div class="swatch"></div>
+            <div class="swatch"></div><div class="swatch"></div>
+            <div class="swatch"></div>
+            <span class="palette-hint">提取色板</span>
+          </div>
+        </div>
+      `;
+
+      const img = card.querySelector('img');
+      const sk  = card.querySelector('.card__skeleton');
+
+      img.onload = () => {
+        img.classList.add('loaded');
+        sk.style.opacity = '0';
+        requestAnimationFrame(() => {
+          const pal = extractPalette(img);
+          const idx = [...document.querySelectorAll('.card')].indexOf(card);
+          cardPalettes[idx] = pal;
+          paint(card, pal);
+          setTimeout(()=>sk.remove(), 400);
+        });
+      };
+      img.src = `https://picsum.photos/seed/${seed}/800/500`;
+      return card;
+    }
+
+    // ── Render ────────────────────────────────────
+    function render(seeds) {
+      const g = document.getElementById('grid');
+      g.innerHTML = '';
+      cardPalettes.length = 0;
+      seeds.forEach((seed, i) => {
+        const c = makeCard(CARDS[i], seed);
+        c.style.cssText = 'opacity:0;transform:translateY(16px)';
+        g.appendChild(c);
+        setTimeout(() => {
+          c.style.transition = 'opacity .4s ease, transform .4s cubic-bezier(.22,1,.36,1)';
+          c.style.opacity = '1';
+          c.style.transform = 'translateY(0)';
+        }, i * 70);
+      });
+    }
+
+    function loadNew() {
+      setIdx = (setIdx+1) % SEEDS.length;
+      const btn = document.getElementById('btnRefresh');
+      btn.classList.add('spinning');
+      render(SEEDS[setIdx]);
+      setTimeout(()=>btn.classList.remove('spinning'), 700);
+    }
+
+    // ── Tooltip ───────────────────────────────────
+    const tip = document.getElementById('tip');
+    document.addEventListener('mouseover', e => {
+      const sw = e.target.closest('.swatch');
+      if (!sw?.dataset.hex) return;
+      const h = sw.dataset.hex;
+      tip.textContent = h.toUpperCase();
+      tip.style.background = h;
+      const rv=parseInt(h.slice(1,3),16), gv=parseInt(h.slice(3,5),16), bv=parseInt(h.slice(5,7),16);
+      tip.style.color = (0.299*rv+0.587*gv+0.114*bv)/255 > 0.5 ? '#000' : '#fff';
+      tip.classList.add('show');
+    });
+    document.addEventListener('mousemove', e => {
+      if (!tip.classList.contains('show')) return;
+      tip.style.left = (e.clientX+12)+'px';
+      tip.style.top  = (e.clientY-32)+'px';
+    });
+    document.addEventListener('mouseout', e => {
+      if (e.target.closest('.swatch')) tip.classList.remove('show');
+    });
+
+    render(SEEDS[setIdx]);
+  </script>
+</body>
+</html>
