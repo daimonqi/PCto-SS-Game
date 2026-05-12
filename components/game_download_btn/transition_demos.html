@@ -59,9 +59,225 @@
            --------------------------------------------------- */
         .btn-transition-wrapper {
             margin: 0 auto; /* 居中显示 */
+            position: relative;
+            width: 296px;
+            height: 48px;
+            border-radius: 4px;
+            cursor: pointer;
+            overflow: visible;
+            box-sizing: border-box;
+            transform: translateZ(0); /* Prevent jitter by keeping it on a GPU layer */
+            
+            /* ==========================================
+               动画时间中控台 (Animation Timing Control)
+               ========================================== */
+            --anim-duration: 1.2s;                  /* 整体切换的总时间 */
+            --anim-ease: cubic-bezier(0.4, 0, 0.2, 1); /* 平滑的缓入缓出曲线，消除顿挫感 */
         }
 
+        /* 按钮重叠布局 */
+        .btn-transition-wrapper > .btn-progress,
+        .btn-transition-wrapper > .btn-play {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            border: none;
+        }
 
+        /* 初始状态：安装中显示，开始游戏隐藏 */
+        .btn-transition-wrapper .btn-play {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* 1. 整体容器状态 */
+        .btn-transition-wrapper.is-transitioning {
+            pointer-events: none; /* 动画期间禁止点击 */
+        }
+
+        /* 动画期间禁用所有默认 transition，防止与 keyframes 冲突导致重绘卡顿 */
+        .btn-transition-wrapper.is-transitioning * {
+            transition: none !important;
+        }
+
+        /* ==================================================
+           最新方案：从上到下填充 + 内阴影辉光扩展 (Top-to-Bottom Fill + Inner Glow)
+           ================================================== */
+        .btn-transition-wrapper.is-transitioning .btn-progress {
+            will-change: transform, clip-path;
+            animation: progress-wipe-down var(--anim-duration) var(--anim-ease) forwards;
+        }
+        @keyframes progress-wipe-down {
+            0% { clip-path: inset(-100px); }
+            100% { clip-path: inset(100% -100px -100px -100px); }
+        }
+
+        /* 统一动效方案：缩短至 1.2s，回归原生 Bezier 插值确保 GPU 级别的丝滑感 */
+        .btn-transition-wrapper.is-transitioning .btn-play {
+            opacity: 1;
+            pointer-events: none;
+            will-change: transform, clip-path, box-shadow;
+            animation: play-unified-container 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .btn-transition-wrapper.is-transitioning .btn-play::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: #FF7210;
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 4px;
+            animation: play-unified-mask 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        /* 容器层：专注物理填充与阴影沉淀
+           填充：0-100% 保持极致丝滑的 Bezier 插值
+           阴影：配合褪色时机，从 40% (0.48s) 就开始隐约浮现，增强立体感
+        */
+        @keyframes play-unified-container {
+            0% { 
+                clip-path: inset(-100px -100px 100% -100px); 
+                box-shadow: 0px 0px 0px 0px rgba(166, 61, 5, 0), inset 0px 0px 0px 0px rgba(255, 114, 16, 0); 
+            }
+            40% {
+                /* 阴影提前浮现，与褪色过程呼应 */
+                box-shadow: 0px 2px 4px 0px rgba(166, 61, 5, 0.1), inset 0px 0px 2px 0px rgba(255, 114, 16, 0.02);
+            }
+            100% { 
+                clip-path: inset(-100px); 
+                box-shadow: 0px 8px 16px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 8px 0px rgba(255, 114, 16, 0.1);
+            }
+        }
+
+        /* 遮罩层：橙色褪去
+           提前褪色点：从 30% (约 0.36s) 就开始淡出，在填充的中后期完成色彩转换
+           这样填充动作和褪色动作在视觉中心点完美交汇，消除任何先后的断层感
+        */
+        @keyframes play-unified-mask {
+            0% { opacity: 1; }
+            30% { opacity: 1; } /* 填充初期极短时间内保持橙色，随后立即进入褪色 */
+            90% { opacity: 0; } /* 在物理动作完全停止前（1.08s）就完成褪色，让最终态定格更稳 */
+            100% { opacity: 0; }
+        }
+
+        /* 强制内容绝对居中，仅在过渡演示容器内生效，确保不影响全局 game_download_btn 样式 */
+        .btn-transition-wrapper .btn-play__content,
+        .btn-transition-wrapper .btn-progress__content {
+            position: absolute !important;
+            left: 50% !important;
+            top: 50% !important;
+            transform: translate(-50%, -50%) translateZ(0) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 6px !important;
+            width: max-content !important;
+            margin: 0 !important;
+            will-change: transform !important;
+        }
+
+        /* ENTRY ANIMATION for Play text (开始游戏) - 彻底杀掉所有循环动效和弹性缩放 */
+        .btn-play__text .char,
+        .btn-play__icon {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: translateZ(0) !important;
+            transition: none !important;
+            color: inherit !important;
+            will-change: transform !important; /* 强制保持合成层，防止结束时重绘位移 */
+        }
+
+        /* 修复 Icon 在最后一帧抖动：
+           1. 强制禁止所有 transition，防止最后一帧与完成态之间产生 sub-pixel 补间
+           2. 始终保持 0.5px 偏移并启用 GPU 合成层 
+        */
+        .btn-play__icon-wrapper {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: translateY(0.5px) translateZ(0) !important; 
+            transition: none !important;
+            will-change: transform !important;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            image-rendering: -webkit-optimize-contrast; /* 增强图标渲染稳定性 */
+        }
+
+        .btn-play {
+            transition: none !important; /* 禁止任何可能由于 shadow/clip-path 微差导致的补间 */
+        }
+
+        /* --------------------------------------------------
+           Text character stability
+        -------------------------------------------------- */
+        .char {
+            display: inline-block;
+            transition: none !important;
+            letter-spacing: 0; /* 锁定字间距，防止渲染引擎在动画结束时微调 */
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* 仅在“开始游戏”按钮内，强制杀掉所有波浪动效，保持静止 */
+        .btn-play .char {
+            animation: none !important;
+            transform: translateZ(0) !important;
+            opacity: 1 !important;
+            color: inherit !important;
+            will-change: transform !important;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+
+        /* 安装中状态的文字：在没有过渡时，允许继承原有的 char-wave-installing */
+        .btn-progress--installing .char {
+            display: inline-block;
+        }
+
+        /* EXIT ANIMATION for Installing text (游戏安装中) */
+        .btn-transition-wrapper.is-transitioning .btn-progress__title .char {
+            /* 只有在进入过渡状态后，才强制切换到退场动画 */
+            animation: char-exit 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+        }
+        .btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(1) { animation-delay: 0.0s !important; }
+        .btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(2) { animation-delay: 0.05s !important; }
+        .btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(3) { animation-delay: 0.1s !important; }
+        .btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(4) { animation-delay: 0.15s !important; }
+        .btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(5) { animation-delay: 0.2s !important; }
+
+        @keyframes char-exit {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-12px); opacity: 0; }
+        }
+
+        /* ==================================================
+           动画完成，彻底切换状态
+           ================================================== */
+        .btn-transition-wrapper.is-completed .btn-progress {
+            display: none;
+        }
+        .btn-transition-wrapper.is-completed .btn-play {
+            opacity: 1;
+            pointer-events: auto;
+            clip-path: inset(-100px) !important; /* 使用一个极大的 inset 代替 none，防止渲染层级切换瞬间抖动 */
+        }
+        .btn-transition-wrapper.is-completed * {
+            transition: none !important; /* 确保切换到 completed 类时没有任何 sub-pixel 补间 */
+        }
+        .btn-transition-wrapper.is-completed .btn-play__text .char {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: translateZ(0) !important;
+            will-change: transform !important;
+        }
+        .btn-transition-wrapper.is-completed .btn-play__icon-wrapper {
+            animation: none !important;
+            opacity: 1 !important;
+            transform: translateY(0.5px) translateZ(0) !important;
+            will-change: transform !important;
+        }
         /* 重置按钮 - 仅用于演示 */
         .reset-btn {
             margin-top: 40px;
@@ -88,12 +304,10 @@
 
         <div class="btn-transition-wrapper" id="transition-demo" onclick="triggerTransition()">
             <!-- 1. 游戏安装中 (来自最新的 btn-progress 样式) -->
-            <div class="btn-progress btn-progress--installing" id="btn-installing">
+            <div class="btn-progress btn-progress--installing w-296" id="btn-installing">
                 <div class="btn-progress__content">
                     <div class="btn-progress__text-group">
-                        <span class="btn-progress__title">
-                            <span class="char">游</span><span class="char">戏</span><span class="char">安</span><span class="char">装</span><span class="char">中</span>
-                        </span>
+                        <span class="btn-progress__title"><span class="char" style="--i:0">游</span><span class="char" style="--i:1">戏</span><span class="char" style="--i:2">安</span><span class="char" style="--i:3">装</span><span class="char" style="--i:4">中</span></span>
                     </div>
                 </div>
             </div>
@@ -140,7 +354,7 @@
                 wrapper.classList.add('is-completed');
                 
                 // 此时真正的 "开始游戏" 按钮可以被点击，它的 hover 效果也会生效
-            }, 2000); // 2000ms 与 CSS 中 --anim-duration 保持绝对同步
+            }, 1200); // 1200ms 与 CSS 中 --anim-duration 保持绝对同步
         }
 
         function resetTransition() {
