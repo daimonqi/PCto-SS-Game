@@ -162,6 +162,28 @@
   overflow: hidden;
 }
 
+.btn-progress__bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 296px;
+  height: 100%;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #FFE1BD, rgba(255, 255, 255, 0) 100%);
+  animation: progress-sweep 2s linear infinite;
+  transform: translateX(-100%);
+}
+
+@keyframes progress-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+
 .btn-progress--paused .btn-progress__bar::after,
 .btn-progress--completed .btn-progress__bar::after,
 .btn-progress--installing .btn-progress__bar::after {
@@ -537,6 +559,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: launch-pulse 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes launch-pulse {
+  0% { opacity: 0.6; }
+  100% { opacity: 1; text-shadow: 0 0 8px rgba(255,255,255,0.4); }
 }
 
 /* 启动中隐藏图标 */
@@ -555,6 +583,8 @@
   border-radius: 4px;
   cursor: pointer;
   overflow: visible;
+  box-sizing: border-box;
+  transform: translateZ(0); /* Prevent jitter by keeping it on a GPU layer */
   
   /* ==========================================
      动画时间中控台 (Animation Timing Control)
@@ -659,14 +689,69 @@
   }
 }
 
-/* 文字与图标的滑入浮现，去除blur防止抗锯齿闪烁 */
-.btn-transition-wrapper.is-transitioning .btn-play__content {
-  animation: text-slide-up var(--anim-duration) var(--anim-ease) forwards;
+/* 文字与图标的滑入浮现，结合弹性缩放(Spring Bounce)与字元错落进退场 */
+.btn-transition-wrapper.is-transitioning .btn-play__icon-wrapper {
+  opacity: 0;
+  animation: icon-spring-bounce 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation-delay: 0.3s;
 }
-@keyframes text-slide-up {
-  0% { transform: translate3d(0, 8px, 0); }
-  60% { transform: translate3d(0, 0, 0); }
-  100% { transform: translate3d(0, 0, 0); }
+
+@keyframes icon-spring-bounce {
+  0% { transform: translateY(16px) scale(0.5); opacity: 0; }
+  50% { transform: translateY(-4px) scale(1.2); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* --------------------------------------------------
+   Text character stagger animations
+-------------------------------------------------- */
+.char {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* EXIT ANIMATION for Installing text (游戏安装中) */
+.btn-transition-wrapper.is-transitioning .btn-progress__title .char {
+  animation: char-exit 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+.btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(1) { animation-delay: 0.0s; }
+.btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(2) { animation-delay: 0.05s; }
+.btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(3) { animation-delay: 0.1s; }
+.btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(4) { animation-delay: 0.15s; }
+.btn-transition-wrapper.is-transitioning .btn-progress__title .char:nth-child(5) { animation-delay: 0.2s; }
+
+@keyframes char-exit {
+  0% { transform: translateY(0) scale(1); opacity: 1; }
+  100% { transform: translateY(-12px) scale(0.8); opacity: 0; }
+}
+
+/* ENTRY ANIMATION for Play text (开始游戏) */
+.btn-transition-wrapper.is-transitioning .btn-play__text .char {
+  opacity: 0;
+  animation: char-enter 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.btn-transition-wrapper.is-transitioning .btn-play__text .char:nth-child(1) { animation-delay: 0.4s; }
+.btn-transition-wrapper.is-transitioning .btn-play__text .char:nth-child(2) { animation-delay: 0.45s; }
+.btn-transition-wrapper.is-transitioning .btn-play__text .char:nth-child(3) { animation-delay: 0.5s; }
+.btn-transition-wrapper.is-transitioning .btn-play__text .char:nth-child(4) { animation-delay: 0.55s; }
+
+@keyframes char-enter {
+  0% { transform: translateY(16px) scale(0.5); opacity: 0; }
+  50% { transform: translateY(-4px) scale(1.1); opacity: 1; }
+  100% { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+/* 最后开始游戏的文字抖动变大 */
+.btn-transition-wrapper.is-transitioning .btn-play__text {
+  animation: text-final-shake var(--anim-duration) linear forwards;
+}
+
+@keyframes text-final-shake {
+  0% { transform: scale(1); }
+  85% { transform: scale(1); }
+  90% { transform: scale(1.1) rotate(3deg); }
+  95% { transform: scale(1.05) rotate(-3deg); }
+  100% { transform: scale(1) rotate(0); }
 }
 
 /* ==================================================

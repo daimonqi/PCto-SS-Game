@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transition Animation Demos</title>
     <!-- 引入全局样式 -->
-    <link rel="stylesheet" href="../index.css">
+    <link rel="stylesheet" href="../../index.css">
     <!-- 引入按钮组件样式 -->
-    <link rel="stylesheet" href="../components/game_download_btn/game_download_btn.css">
+    <link rel="stylesheet" href="game_download_btn.css">
     <style>
         body {
             padding: 40px;
@@ -80,11 +80,11 @@
     </style>
 </head>
 <body>
-    <a href="../components/game_download_btn/game_download_btn.html" class="back-link">← 返回组件页</a>
+    <a href="game_download_btn.html" class="back-link">← 返回组件页</a>
     
     <div class="demo-container">
         <h3 class="section-title">游戏安装 到 开始游戏的过渡动画</h3>
-        <p class="section-desc">平滑的无缝光效填充与状态切换演示</p>
+        <p class="section-desc">结合弹性缩放 (Spring Bounce) 与字元错落进退场的流畅过渡</p>
 
         <div class="btn-transition-wrapper" id="transition-demo" onclick="triggerTransition()">
             <!-- 1. 游戏安装中 (来自最新的 btn-progress 样式) -->
@@ -92,7 +92,7 @@
                 <div class="btn-progress__content">
                     <div class="btn-progress__text-group">
                         <span class="btn-progress__title">
-                            游戏安装中
+                            <span class="char">游</span><span class="char">戏</span><span class="char">安</span><span class="char">装</span><span class="char">中</span>
                         </span>
                     </div>
                 </div>
@@ -112,7 +112,9 @@
                             </defs>
                         </svg>
                     </div>
-                    <span class="btn-play__text">开始游戏</span>
+                    <span class="btn-play__text">
+                        <span class="char">开</span><span class="char">始</span><span class="char">游</span><span class="char">戏</span>
+                    </span>
                 </div>
             </button>
         </div>

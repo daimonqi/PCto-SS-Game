@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Download Buttons</title>
+    <!-- 引入已有的基础按钮样式 -->
+    <link rel="stylesheet" href="../../index.css">
+    <!-- 引入新的下载进度按钮样式 -->
+    <link rel="stylesheet" href="./game_download_btn.css">
+    <style>
+        .section-title {
+            color: rgba(255,255,255,0.8);
+            font-size: 16px;
+            margin-bottom: 16px;
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            margin-top: 40px;
+        }
+        .grid-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+        .demo-column {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div style="max-width: 1000px; margin: 0 auto;">
+        
+        <h2 style="color: white; font-weight: 400; margin-bottom: 8px;">Game Download Buttons</h2>
+        <p style="color: rgba(255,255,255,0.5); font-size: 14px; margin-bottom: 32px;">PC-233 游戏下载按键样式</p>
+
+
+        <!-- 进度状态按钮 -->
+        <h3 class="section-title">下载/安装进度状态 (新样式)</h3>
+        <div class="grid-layout">
+            
+            <!-- 模拟器下载 -->
+            <div class="demo-column">
+                <span class="group-title">模拟器进度 (暂停/进行中/安装中)</span>
+                
+                <!-- 暂停状态 (带播放图标) -->
+                <div class="btn-progress btn-progress--paused w-296">
+                    <div class="btn-progress__content">
+                        <div class="btn-progress__icon-wrapper">
+                            <svg class="btn-progress__icon" viewBox="0 0 16 16" width="16" height="16">
+                                <path d="M4.606 2.056C4.195 1.782 3.666 2.076 3.666 2.57V13.43C3.666 13.924 4.195 14.218 4.606 13.944L12.748 8.513C13.111 8.27 13.111 7.73 12.748 7.487L4.606 2.056Z" fill="currentColor" />
+                            </svg>
+                        </div>
+                        <div class="btn-progress__text-group">
+                            <span class="btn-progress__title">模拟器下载 72%</span>
+                            <div class="btn-progress__size">
+                                <span class="size-current">985MB</span>
+                                <span class="size-divider">/</span>
+                                <span class="size-total">1.56GB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-progress__bar-wrapper">
+                        <div class="btn-progress__bar" style="width: 72%;"></div>
+                    </div>
+                </div>
+
+                <!-- 进行中状态 (带暂停图标) -->
+                <div class="btn-progress w-296">
+                    <div class="btn-progress__content">
+                        <div class="btn-progress__icon-wrapper">
+                            <svg class="btn-progress__icon" viewBox="0 0 16 16" width="16" height="16">
+                                <rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor" />
+                                <rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor" />
+                            </svg>
+                        </div>
+                        <div class="btn-progress__text-group">
+                            <span class="btn-progress__title">模拟器下载 72%</span>
+                            <div class="btn-progress__size">
+                                <span class="size-current">985MB</span>
+                                <span class="size-divider">/</span>
+                                <span class="size-total">1.56GB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-progress__bar-wrapper">
+                        <div class="btn-progress__bar" style="width: 72%;"></div>
+                    </div>
+                </div>
+
+                <!-- 模拟器安装中 (无图标，居中) -->
+                <div class="btn-progress btn-progress--installing w-296">
+                    <div class="btn-progress__content">
+                        <div class="btn-progress__text-group">
+                            <span class="btn-progress__title">模拟器安装中</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 游戏下载 -->
+            <div class="demo-column">
+                <span class="group-title">游戏进度 (暂停/进行中/安装中)</span>
+                
+                <!-- 暂停状态 (带播放图标) -->
+                <div class="btn-progress btn-progress--paused w-296">
+                    <div class="btn-progress__content">
+                        <div class="btn-progress__icon-wrapper">
+                            <svg class="btn-progress__icon" viewBox="0 0 16 16" width="16" height="16">
+                                <path d="M4.606 2.056C4.195 1.782 3.666 2.076 3.666 2.57V13.43C3.666 13.924 4.195 14.218 4.606 13.944L12.748 8.513C13.111 8.27 13.111 7.73 12.748 7.487L4.606 2.056Z" fill="currentColor" />
+                            </svg>
+                        </div>
+                        <div class="btn-progress__text-group">
+                            <span class="btn-progress__title">游戏下载 25%</span>
+                            <div class="btn-progress__size">
+                                <span class="size-current">450MB</span>
+                                <span class="size-divider">/</span>
+                                <span class="size-total">1.80GB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-progress__bar-wrapper">
+                        <div class="btn-progress__bar" style="width: 25%;"></div>
+                    </div>
+                </div>
+
+                <!-- 进行中状态 (带暂停图标) -->
+                <div class="btn-progress w-296">
+                    <div class="btn-progress__content">
+                        <div class="btn-progress__icon-wrapper">
+                            <svg class="btn-progress__icon" viewBox="0 0 16 16" width="16" height="16">
+                                <rect x="3" y="2" width="3.5" height="12" rx="1" fill="currentColor" />
+                                <rect x="9.5" y="2" width="3.5" height="12" rx="1" fill="currentColor" />
+                            </svg>
+                        </div>
+                        <div class="btn-progress__text-group">
+                            <span class="btn-progress__title">游戏下载 25%</span>
+                            <div class="btn-progress__size">
+                                <span class="size-current">450MB</span>
+                                <span class="size-divider">/</span>
+                                <span class="size-total">1.80GB</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn-progress__bar-wrapper">
+                        <div class="btn-progress__bar" style="width: 25%;"></div>
+                    </div>
+                </div>
+
+                <!-- 游戏安装中 (无图标，居中) -->
+                <div class="btn-progress btn-progress--installing w-296">
+                    <div class="btn-progress__content">
+                        <div class="btn-progress__text-group">
+                            <span class="btn-progress__title">游戏安装中</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 独立展示开始游戏按钮 -->
+        <h3 class="section-title">开始游戏 (点击体验启动动效)</h3>
+        <div class="grid-layout">
+            <div class="demo-column">
+                <span class="group-title">主功能入口</span>
+                <button class="btn-play w-296" id="main-play-btn" onclick="triggerLaunch()">
+                    <div class="btn-play__content">
+                        <div class="btn-play__icon-wrapper">
+                            <svg class="btn-play__icon" viewBox="0 0 15.9414 12.1621" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7593 0C13.9749 0 14.991 0.924666 15.106 2.13477L15.9361 10.8721C16.0018 11.5639 15.4582 12.162 14.7632 12.1621H11.5874C11.1411 12.1619 10.7333 11.9099 10.5337 11.5107L9.86672 10.1777C9.76689 9.97807 9.56261 9.85156 9.33938 9.85156H6.60207C6.37884 9.85156 6.17456 9.97807 6.07473 10.1777L5.40774 11.5107C5.20807 11.9101 4.79951 12.1621 4.35305 12.1621H1.17824C0.483269 12.1621 -0.06034 11.5639 0.00539225 10.8721L0.83547 2.13477C0.950477 0.924668 1.96659 0 3.18215 0H12.7593ZM12.438 5.79199C12.0319 5.79199 11.7027 6.12128 11.7027 6.52734C11.7029 6.93324 12.0321 7.26172 12.438 7.26172C12.8439 7.26165 13.1732 6.93319 13.1734 6.52734C13.1734 6.12132 12.844 5.79206 12.438 5.79199ZM4.16652 4.64551H2.99074V5.82422H4.16652V7.00098H5.34524V5.82422H6.52199V4.64551H5.34524V3.46973H4.16652V4.64551ZM10.6743 3.58984C10.2684 3.58984 9.93911 3.91924 9.93899 4.3252C9.93899 4.73126 10.2683 5.06055 10.6743 5.06055C11.0803 5.06048 11.4097 4.73122 11.4097 4.3252C11.4096 3.91928 11.0803 3.58991 10.6743 3.58984Z" fill="url(#paint_final)" fill-opacity="0.95"/>
+                                <defs>
+                                    <linearGradient id="paint_final" x1="3.44462" y1="0.5" x2="14.9446" y2="12.4993" gradientUnits="userSpaceOnUse">
+                                        <stop stop-color="white" stop-opacity="0.95"/>
+                                        <stop offset="1" stop-color="white" stop-opacity="0.85"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <span class="btn-play__text" id="main-play-text">开始游戏</span>
+                    </div>
+                </button>
+            </div>
+        </div>
+
+        <!-- 过渡动效展示 -->
+        <h3 class="section-title">安装完成过渡动效</h3>
+        <div class="grid-layout">
+            <div class="demo-column">
+                <span class="group-title">从"安装中"到"开始游戏" (点击触发)</span>
+                
+                <div class="btn-transition-wrapper" id="transition-demo" onclick="triggerTransition()">
+                    <!-- 1. 游戏安装中 (来自最新的 btn-progress 样式) -->
+                    <div class="btn-progress btn-progress--installing" id="btn-installing">
+                        <div class="btn-progress__content">
+                            <div class="btn-progress__text-group">
+                                <span class="btn-progress__title">
+                                    <span class="char">游</span><span class="char">戏</span><span class="char">安</span><span class="char">装</span><span class="char">中</span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="btn-transition__light-effect"></div>
+
+                    <!-- 2. 开始游戏 (来自最新的 btn-play 样式) -->
+                    <button class="btn-play" id="btn-play">
+                        <div class="btn-play__content">
+                            <div class="btn-play__icon-wrapper">
+                                <svg class="btn-play__icon" viewBox="0 0 15.9414 12.1621" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12.7593 0C13.9749 0 14.991 0.924666 15.106 2.13477L15.9361 10.8721C16.0018 11.5639 15.4582 12.162 14.7632 12.1621H11.5874C11.1411 12.1619 10.7333 11.9099 10.5337 11.5107L9.86672 10.1777C9.76689 9.97807 9.56261 9.85156 9.33938 9.85156H6.60207C6.37884 9.85156 6.17456 9.97807 6.07473 10.1777L5.40774 11.5107C5.20807 11.9101 4.79951 12.1621 4.35305 12.1621H1.17824C0.483269 12.1621 -0.06034 11.5639 0.00539225 10.8721L0.83547 2.13477C0.950477 0.924668 1.96659 0 3.18215 0H12.7593ZM12.438 5.79199C12.0319 5.79199 11.7027 6.12128 11.7027 6.52734C11.7029 6.93324 12.0321 7.26172 12.438 7.26172C12.8439 7.26165 13.1732 6.93319 13.1734 6.52734C13.1734 6.12132 12.844 5.79206 12.438 5.79199ZM4.16652 4.64551H2.99074V5.82422H4.16652V7.00098H5.34524V5.82422H6.52199V4.64551H5.34524V3.46973H4.16652V4.64551ZM10.6743 3.58984C10.2684 3.58984 9.93911 3.91924 9.93899 4.3252C9.93899 4.73126 10.2683 5.06055 10.6743 5.06055C11.0803 5.06048 11.4097 4.73122 11.4097 4.3252C11.4096 3.91928 11.0803 3.58991 10.6743 3.58984Z" fill="url(#paint_final)" fill-opacity="0.95"/>
+                                </svg>
+                            </div>
+                            <span class="btn-play__text">
+                                <span class="char">开</span><span class="char">始</span><span class="char">游</span><span class="char">戏</span>
+                            </span>
+                        </div>
+                    </button>
+                </div>
+                <button onclick="resetTransition()" style="margin-top: 16px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.6); padding: 4px 12px; border-radius: 4px; cursor: pointer; align-self: flex-start; font-size: 12px; transition: all 0.2s;">重置动画</button>
+            </div>
+        </div>
+
+
+
+    </div>
+
+    <script>
+        // 处理过渡动效
+        function triggerTransition() {
+            const wrapper = document.getElementById('transition-demo');
+            if (wrapper.classList.contains('is-transitioning') || wrapper.classList.contains('is-completed')) {
+                return;
+            }
+
+            wrapper.classList.add('is-transitioning');
+            setTimeout(() => {
+                wrapper.classList.remove('is-transitioning');
+                wrapper.classList.add('is-completed');
+            }, 1400);
+        }
+
+        function resetTransition() {
+            const wrapper = document.getElementById('transition-demo');
+            wrapper.classList.remove('is-transitioning');
+            wrapper.classList.remove('is-completed');
+        }
+
+
+        // 处理启动游戏的最终动效
+        function triggerLaunch() {
+            const btn = document.getElementById('main-play-btn');
+            const textSpan = document.getElementById('main-play-text');
+            const animClass = 'btn-play--launching';
+
+            if (btn.classList.contains(animClass)) {
+                btn.classList.remove(animClass);
+                textSpan.innerHTML = '开始游戏';
+                return;
+            }
+
+            btn.classList.add(animClass);
+            const launchText = '游戏启动中';
+            
+            // 直接修改文字，不再包装span
+            textSpan.innerHTML = launchText;
+            
+            // 3秒后自动恢复（模拟启动完成）
+            setTimeout(() => {
+                if (btn.classList.contains(animClass)) {
+                    btn.classList.remove(animClass);
+                    textSpan.innerHTML = '开始游戏';
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
