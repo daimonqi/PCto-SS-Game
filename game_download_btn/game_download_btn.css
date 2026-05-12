@@ -1,0 +1,244 @@
+/* f:/aiUI/game_download_btn/game_download_btn.css */
+.btn-progress {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  width: 296px;
+  height: 48px;
+  border-radius: 6px;
+  background-color: var(--white-5, rgba(255, 255, 255, 0.05));
+  box-shadow: inset 0px 1px 1px 0px rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: var(--font-family-base, "Microsoft YaHei UI", sans-serif);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Gradient Stroke using pseudo-element */
+.btn-progress::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  border-radius: inherit;
+  padding: 0.5px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.05) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.3s ease;
+}
+
+.btn-progress:not(.btn-progress--completed):not(.btn-progress--complete-anim):hover {
+  background-color: var(--white-10, rgba(255, 255, 255, 0.1));
+}
+
+.btn-progress:not(.btn-progress--completed):not(.btn-progress--complete-anim):active {
+  background-color: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0px 1px 4px 0px rgba(255, 255, 255, 0.05);
+}
+
+.btn-progress__content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  transition: filter 0.3s ease;
+}
+
+/* Icon Standardization */
+.btn-progress .icon-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  margin-left: 12px;
+}
+
+.btn-progress .icon-slot svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.btn-progress__text-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding-left: 8px;
+  padding-right: 20px;
+}
+
+.btn-progress__title {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--white-100, #ffffff);
+  white-space: nowrap;
+}
+
+.btn-progress__size {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.size-current {
+  font-weight: bold;
+  color: var(--white-80, rgba(255, 255, 255, 0.8));
+}
+
+.size-divider {
+  font-weight: normal;
+  color: var(--white-60, rgba(255, 255, 255, 0.6));
+}
+
+.size-total {
+  font-weight: bold;
+  color: var(--white-60, rgba(255, 255, 255, 0.6));
+}
+
+/* Progress bar at the bottom */
+.btn-progress__bar-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  z-index: 3;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.btn-progress__bar {
+  height: 100%;
+  background-color: var(--primary-6, #FF7210);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 1px 1px 0;
+}
+
+/* ==================================================
+   3-Layer Comet Animation
+   ================================================== */
+.btn-progress__comet-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-progress--complete-anim .btn-progress__comet-layer {
+  opacity: 1;
+}
+
+.comet-wrap {
+  position: absolute;
+  height: 100%;
+  width: 200%;
+  left: -100%;
+  top: 0;
+  will-change: transform;
+}
+
+.btn-progress--complete-anim .comet-wrap {
+  animation: comet-move 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Layer 1: Trailing Mist (Bottom layer, widest, most blur) */
+.comet-mist {
+  position: absolute;
+  height: 100%;
+  width: 120px;
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 114, 16, 0.3), transparent);
+  filter: blur(12px);
+  transform: skewX(-20deg);
+}
+
+/* Layer 2: Bloom (Middle layer, orange glow) */
+.comet-bloom {
+  position: absolute;
+  height: 100%;
+  width: 60px;
+  right: 30px;
+  background: radial-gradient(ellipse at center, rgba(255, 114, 16, 0.6) 0%, transparent 70%);
+  filter: blur(6px);
+}
+
+/* Layer 3: Core (Top layer, bright white center) */
+.comet-core {
+  position: absolute;
+  height: 100%;
+  width: 12px;
+  right: 54px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  box-shadow: 0 0 15px #ffffff;
+  filter: blur(1px);
+}
+
+@keyframes comet-move {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(150%); }
+}
+
+/* ==================================================
+   Completion State (PC-233 HIFI Match)
+   ================================================== */
+.btn-progress--completed {
+  border: none;
+  background: radial-gradient(100% 200% at 50% 0%, rgba(255, 114, 16, 0.75) 0%, rgba(166, 61, 5, 0) 100%), rgba(166, 61, 5, 0.7);
+  box-shadow: 0px 12px 24px 0px rgba(166, 61, 5, 0.4), inset 0px 0px 9px 0px rgba(255, 114, 16, 0.1);
+}
+
+/* Update border highlight for completed state */
+.btn-progress--completed::after {
+  background: linear-gradient(180deg, rgba(255, 245, 232, 0.8) 0%, rgba(255, 223, 201, 0.2) 100%);
+  padding: 0.5px;
+  opacity: 1;
+}
+
+.btn-progress--completed:hover {
+  background: radial-gradient(100% 200% at 50% 0%, rgba(255, 114, 16, 0.9) 0%, rgba(166, 61, 5, 0) 100%), rgba(166, 61, 5, 0.9);
+  transform: scale(1.01);
+}
+
+.btn-progress--completed:active {
+  transform: scale(0.99);
+  background: rgba(166, 61, 5, 0.8);
+}
+
+/* Layout adjustments for states */
+.btn-progress--installing .btn-progress__content,
+.btn-progress--completed .btn-progress__content {
+  justify-content: center;
+}
+
+.btn-progress--installing .btn-progress__text-group,
+.btn-progress--completed .btn-progress__text-group {
+  flex: none;
+  padding: 0;
+  justify-content: center;
+}
+
+.btn-progress--completed .btn-progress__bar-wrapper,
+.btn-progress--completed .btn-progress__size {
+  display: none;
+}
+
+.btn-progress--completed .icon-slot {
+  margin-left: 0;
+  margin-right: 4px;
+}

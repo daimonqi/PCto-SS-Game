@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hover Styles Showcase - Design System</title>
+    <link rel="stylesheet" href="index.css">
+    <style>
+        body {
+            background-color: #101017;
+            padding: 40px;
+        }
+        .card-demo {
+            background: transparent !important; /* 确保是从无背景开始 */
+            border: none; /* 彻底去掉描边 */
+            position: relative;
+            padding: 24px;
+            border-radius: 12px;
+            cursor: pointer;
+        }
+        .showcase-section {
+            margin-bottom: 60px;
+        }
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+            background: #1a1a24;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .matrix-table th, .matrix-table td {
+            padding: 16px 24px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .matrix-table th {
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-tertiary);
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .color-preview {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            vertical-align: middle;
+            margin-right: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 20px;
+        }
+        .card-demo {
+            background: transparent;
+        }
+        .orange-block {
+            display: inline-block;
+            width: 32px;
+            height: 20px;
+            background: var(--primary-6);
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .blue-block {
+            display: inline-block;
+            width: 32px;
+            height: 20px;
+            background: var(--color-link-blue);
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .white-block {
+            display: inline-block;
+            width: 32px;
+            height: 20px;
+            background: #fff;
+            border-radius: 2px;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        .awaken-badge {
+            background: var(--primary-6);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        .dev-tag {
+            font-family: monospace;
+            color: var(--primary-5);
+            background: rgba(255, 147, 59, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <header style="margin-bottom: 40px;">
+        <h1 class="text-display">Hover 交互系统规范演示 (V4)</h1>
+        <p class="text-secondary">交互基准：容器提亮 5% 白色遮罩 | 文本亮度 20% 级阶跃升 | 品牌橙唤醒交互</p>
+    </header>
+
+    <!-- 1. 容器交互模式 -->
+    <section class="showcase-section">
+        <h2 class="text-xl">1. 容器交互模式 (Container Interaction)</h2>
+        <p class="text-sm">优先级排列：动效增强 > 基础提亮 > 纯文字。适用于卡片、列表项、磁贴容器。</p>
+        <div class="showcase-grid">
+            <!-- A. 动效增强 -->
+            <div class="card-demo hover-container-glow">
+                <h3 class="text-lg text-bright">动效增强 (Animated)</h3>
+                <p class="text-sm text-secondary">Class: <span class="dev-tag">.hover-container-glow</span></p>
+                <div style="margin: 12px 0; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                    <p class="text-xs text-tertiary">交互效果：</p>
+                    <ul class="text-xs text-tertiary" style="padding-left: 16px; margin: 4px 0;">
+                        <li>背景：无 -> 5% 白色 Overlay</li>
+                        <li>描边：6.5s 匀速旋转光效 (Border Glow)</li>
+                    </ul>
+                </div>
+                <div class="text-secondary text-sm">悬停查看动效表现</div>
+            </div>
+
+            <!-- B. 基础提亮 -->
+            <div class="card-demo hover-container-base">
+                <h3 class="text-lg text-bright">基础提亮 (Basic)</h3>
+                <p class="text-sm text-secondary">Class: <span class="dev-tag">.hover-container-base</span></p>
+                <div style="margin: 12px 0; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                    <p class="text-xs text-tertiary">交互效果：</p>
+                    <ul class="text-xs text-tertiary" style="padding-left: 16px; margin: 4px 0;">
+                        <li>背景：无 -> 5% 白色 Overlay</li>
+                        <li>无边框动效</li>
+                    </ul>
+                </div>
+                <div class="text-secondary text-sm">悬停查看背景变化</div>
+            </div>
+
+            <!-- C. 纯文字模式 -->
+            <div class="card-demo hover-container-none">
+                <h3 class="text-lg text-bright">纯文字模式 (Text Only)</h3>
+                <p class="text-sm text-secondary">Class: <span class="dev-tag">.hover-container-none</span></p>
+                <div style="margin: 12px 0; padding: 12px; background: rgba(0,0,0,0.2); border-radius: 6px;">
+                    <p class="text-xs text-tertiary">交互效果：</p>
+                    <ul class="text-xs text-tertiary" style="padding-left: 16px; margin: 4px 0;">
+                        <li>背景：始终保持透明 (或原有底色)</li>
+                        <li>内部文字：配合文本 Hover 类实现提亮</li>
+                    </ul>
+                </div>
+                <div class="text-primary text-sm">内部文字产生提亮 (80%->100%)</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. 文本交互模式：白色系 (规则 + 演示) -->
+    <section class="showcase-section">
+        <h2 class="text-xl">2. 文本交互 - 白色系 (Typography: White Opacity)</h2>
+        <p class="text-sm">规则：悬停时透明度提升一级 (20% Step)。适用于大多数常规文本及图标。</p>
+        
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th width="15%">分类</th>
+                    <th width="25%">变量 / 规则</th>
+                    <th width="30%">静态参考 (Default/Hover)</th>
+                    <th width="30%">即时交互演示 (请悬停文字)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 强文本 -->
+                <tr>
+                    <td class="text-base-strong">强文本</td>
+                    <td><span class="dev-tag">--text-bright</span><br><small>不跃迁 (已满额)</small></td>
+                    <td>
+                        <div class="white-block" style="opacity:1"></div> 100%
+                    </td>
+                    <td>
+                        <span class="text-bright" style="font-size: 16px; cursor: pointer;">Hover: 保持 100% 亮度</span>
+                    </td>
+                </tr>
+                <!-- 主正文 -->
+                <tr>
+                    <td class="text-base-strong">主正文</td>
+                    <td><span class="dev-tag">--text-primary</span><br><small>跃迁至 100%</small></td>
+                    <td>
+                        <div class="white-block" style="opacity:0.8"></div> 80% → 100%
+                    </td>
+                    <td>
+                        <span class="text-primary" style="font-size: 16px; cursor: pointer;">Hover: 从 80% 变 100%</span>
+                    </td>
+                </tr>
+                <!-- 次级文 -->
+                <tr>
+                    <td class="text-base-strong">次级文</td>
+                    <td><span class="dev-tag">--text-secondary</span><br><small>跃迁至 80%</small></td>
+                    <td>
+                        <div class="white-block" style="opacity:0.6"></div> 60% → 80%
+                    </td>
+                    <td>
+                        <span class="text-secondary" style="font-size: 16px; cursor: pointer;">Hover: 从 60% 变 80%</span>
+                    </td>
+                </tr>
+                <!-- 弱化文 -->
+                <tr>
+                    <td class="text-base-strong">弱化文</td>
+                    <td><span class="dev-tag">--text-tertiary</span><br><small>跃迁至 60%</small></td>
+                    <td>
+                        <div class="white-block" style="opacity:0.4"></div> 40% → 60%
+                    </td>
+                    <td>
+                        <span class="text-tertiary" style="font-size: 16px; cursor: pointer;">Hover: 从 40% 变 60%</span>
+                    </td>
+                </tr>
+                <!-- 幽灵态 -->
+                <tr>
+                    <td class="text-base-strong">幽灵态</td>
+                    <td><span class="dev-tag">--text-ghost</span><br><small>跃迁至 40%</small></td>
+                    <td>
+                        <div class="white-block" style="opacity:0.2"></div> 20% → 40%
+                    </td>
+                    <td>
+                        <span class="text-ghost" style="font-size: 16px; cursor: pointer;">Hover: 从 20% 变 40%</span>
+                    </td>
+                </tr>
+                <!-- 链接 -->
+                <tr style="border-top: 2px solid rgba(255,255,255,0.1);">
+                    <td class="text-base-strong">蓝色链接</td>
+                    <td><span class="dev-tag">#409EFF</span><br><small>跃迁至 #66B1FF</small></td>
+                    <td>
+                        <div class="blue-block"></div> → <div class="blue-block" style="background:#66B1FF"></div>
+                    </td>
+                    <td>
+                        <span class="text-link-blue" style="font-size: 16px; cursor: pointer; text-decoration: underline;">Hover: 点击跳转链接</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <!-- 3. 文本交互模式：品牌系 (规则 + 演示) -->
+    <section class="showcase-section">
+        <h2 class="text-xl">3. 文本交互 - 品牌系 (Typography: Brand Orange)</h2>
+        <p class="text-sm">规则：悬停时激活品牌主色橙。适用于重点操作、功能入口、激活状态。</p>
+        
+        <table class="matrix-table" style="background: rgba(255, 114, 16, 0.02); border-color: rgba(255, 114, 16, 0.1);">
+            <thead>
+                <tr>
+                    <th width="15%">交互类型</th>
+                    <th width="25%">实现类名 (Class)</th>
+                    <th width="30%">默认状态 (Static)</th>
+                    <th width="30%">即时演示 (Live Hover)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 品牌文本 -->
+                <tr>
+                    <td class="text-base-strong">品牌文本</td>
+                    <td><span class="dev-tag">.text-brand</span></td>
+                    <td><span class="text-brand">品牌橙 #FF7210</span></td>
+                    <td><span class="text-brand" style="cursor:pointer; font-size: 16px;">悬停变浅橙 #FF933B</span></td>
+                </tr>
+                <!-- 唤醒态演示 -->
+                <tr>
+                    <td class="text-base-strong">唤醒态 (Awaken)</td>
+                    <td><span class="dev-tag">.hover-awaken</span></td>
+                    <td><span class="text-primary">80% 白色文本</span></td>
+                    <td><span class="text-primary hover-awaken" style="cursor:pointer; font-size: 16px; font-weight: 700;">悬停唤醒品牌橙 <span class="awaken-badge">AWAKEN</span></span></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</body>
+</html>
+
+

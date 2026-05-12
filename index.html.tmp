@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Global Design System - Web Showcase</title>
+  <link rel="stylesheet" href="index.css">
+  <style>
+    /* 辅助展示用的排版保护样式 */
+    .showcase-header { margin-bottom: 48px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 24px; }
+    .showcase-section { margin-bottom: 48px; }
+    .showcase-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
+    .color-swatch-box { padding: 16px; border-radius: 8px; font-size: 14px; font-weight: 700; margin-bottom: 8px; border: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between;}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="showcase-header">
+    <div class="text-display" style="margin-bottom: 8px;">全局视觉设计体系 Web 展厅</div>
+    <div class="text-sm">Global Design Tokens Live Demo (Reference: Design System Typography Colors.md)</div>
+  </div>
+
+  <!-- 1. Color Palette Matrix -->
+  <div class="showcase-section">
+    <div class="text-xl" style="margin-bottom: 24px;">1. 主色矩阵级联 (Primary Color Scale)</div>
+    <div class="showcase-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
+        <div class="color-swatch-box" style="background: var(--primary-1); color: #000;">
+          <span>--primary-1</span><span>#FFF5E8</span>
+        </div>
+        <div class="color-swatch-box" style="background: var(--primary-5); color: #000;">
+          <span>--primary-5</span><span>#FF933B</span>
+        </div>
+        <div class="color-swatch-box" style="background: var(--primary-6); color: #fff;">
+          <span>--primary-6 (基座)</span><span>#FF7210</span>
+        </div>
+        <div class="color-swatch-box" style="background: var(--primary-7); color: #fff;">
+          <span>--primary-7</span><span>#D2570A</span>
+        </div>
+        <div class="color-swatch-box" style="background: var(--primary-10); color: #fff;">
+          <span>--primary-10</span><span>#723307</span>
+        </div>
+    </div>
+  </div>
+
+  <!-- 2. Typography Color Hierarchy -->
+  <div class="showcase-section">
+    <div class="text-xl" style="margin-bottom: 24px;">2. 文本透明度矩阵与环境层级背景 (Text & Background Tier)</div>
+    <div class="card-surface">
+      <div class="text-xs" style="margin-bottom: 24px;">在 `--color-bg-dialog: #2B2B36` 的弹窗/卡片背景层上测试文字色散：</div>
+      <div class="text-display" style="margin-bottom: 12px;">特强文本 (--text-bright, 100%白) - 极致醒目</div>
+      <div class="text-xl" style="margin-bottom: 12px;">主正文级 (--text-primary, 80%白) - 标准阅读锚</div>
+      <div class="text-lg" style="margin-bottom: 12px; color: var(--color-text-secondary);">补充文本 (--text-secondary, 60%白) - 次要注解与解释</div>
+      <div class="text-base" style="margin-bottom: 12px; color: var(--color-text-tertiary);">弱占位符 (--text-tertiary, 40%白) - 失效态或边缘区</div>
+      <div class="text-sm" style="margin-bottom: 12px; color: var(--color-text-ghost);">幽灵无形 (--text-ghost, 20%白) - 最底层无感点缀/版权说明</div>
+      
+      <div style="margin-top: 24px;">
+        <a href="#" class="nav-jump-external text-base">🔗 外跳超链接示例 (--color-link-blue, Hover有下划线)</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Typography Scale Engine -->
+  <div class="showcase-section">
+    <div class="text-xl" style="margin-bottom: 24px;">3. 标准排版刻度引擎 (Typography Engine)</div>
+    <div class="card-surface" style="display: flex; flex-direction: column; gap: 20px;">
+      <div class="text-display">.text-display — 展示大数字 (24px, w700, lh:1.33)</div>
+      <div class="text-2xl">.text-2xl — 弹窗顶部总栏目主标题 (20px, w700, lh:1.4)</div>
+      <div class="text-xl">.text-xl — 核心结构模块分类卡名称 (18px, w700, lh:1.33)</div>
+      <div class="text-xl-dark">.text-xl-dark — 降权使用的主级标题 (18px, w700, 60%次要白)</div>
+      <div class="text-lg">.text-lg — 嵌套式次级内部面板标题 (16px, w700, lh:1.375)</div>
+      <div class="text-base">.text-base — 铺满画卷的标准主导段落说明文，适合大段落连续阅读 (15px, w400, lh:1.5)</div>
+      <div class="text-sm">.text-sm — 空间压缩界面中的功能表单独行描述字 (14px, w400, lh:1.4)</div>
+      <div class="text-xs">.text-xs — 极限密集排版、数据表格密集阵提示占位 (13px, w400, lh:1.3)</div>
+    </div>
+  </div>
+
+  <!-- 4. Interactive Components Simulator -->
+  <div class="showcase-section">
+    <div class="text-xl" style="margin-bottom: 24px;">4. 交互微动效规范校验 (Hover & Click Interaction Rules)</div>
+    <div class="showcase-grid">
+      <!-- 原地内部功能操作 -->
+      <div class="card-surface">
+         <div class="text-lg" style="margin-bottom:8px;">原地内部交互操作 (Alpha 跃升)</div>
+         <div class="text-xs" style="margin-bottom:24px;">规则：悬停白度暴力提亮，并辅以容器透明白垫底</div>
+         
+         <div style="display: flex; gap: 12px; align-items:center;">
+           <div class="icon-action">
+             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+             刷新视图
+           </div>
+           
+           <div class="icon-action">
+             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+             设 置
+           </div>
+         </div>
+      </div>
+      
+      <!-- 打断视界离场操作 -->
+      <div class="card-surface">
+         <div class="text-lg" style="margin-bottom:8px;">离场脱嵌交互操作 (主强导色唤醒)</div>
+         <div class="text-xs" style="margin-bottom:24px;">规则：动作触怒跃迁直转品牌强色 (#FF7210) 预示新视窗</div>
+         
+         <div style="display: flex; gap: 12px; align-items:center; flex-wrap: wrap;">
+           <div class="nav-jump-action">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+              前往外部发布台
+           </div>
+           <div class="nav-jump-action">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+              退出底层引擎
+           </div>
+         </div>
+      </div>
+    </div>
+    
+    <!-- 实心核心主动作按钮 -->
+    <div style="margin-top: 32px; display: flex; align-items: center; gap: 24px; padding: 24px; background: rgba(0,0,0,0.2); border-radius: 12px;">
+      <div style="flex-shrink: 0;"><button class="btn-primary">实心业务主按钮</button></div>
+      <div class="text-sm">
+        主按钮动作：<br>
+        1. 默认态使用 --primary-6 (#FF7210)<br>
+        2. Hover 会浮起提亮至 1 发出弥散倒影光<br>
+        3. Pressed 按压回弹并强制沉重变暗 (primary-7)
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

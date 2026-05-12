@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC-233 Hover Interaction System</title>
+    <link rel="stylesheet" href="hover.css">
+</head>
+<body>
+
+    <a class="nav-link" href="index.html">
+        ← 返回 Button 系统
+    </a>
+
+    <header class="page-header">
+        <h1 class="text-display">Hover 交互系统规范 (V5)</h1>
+        <p>交互基准：容器提亮 5% 白色遮罩 · 文本亮度 20% 阶梯跃升 · 品牌橙唤醒交互</p>
+    </header>
+
+
+    <!-- ============================
+         1. 容器交互模式
+    ============================= -->
+    <section class="showcase-section">
+        <div class="section-title">
+            <h2 class="text-xl">1. 容器交互模式 (Container Interaction)</h2>
+        </div>
+        <p class="section-desc">优先级排列：动效增强 › 基础提亮 › 纯文字。适用于卡片、列表项、磁贴容器。</p>
+        
+        <div class="showcase-grid">
+            <!-- A. 动效增强 -->
+            <div class="card-demo hover-container-glow">
+                <h3 class="text-lg text-bright">动效增强 (Animated)</h3>
+                <p class="card-meta">.hover-container-glow</p>
+                <div class="card-rule">
+                    <p class="text-xs text-tertiary">交互效果：</p>
+                    <ul>
+                        <li>背景：无 → 5% 白色 Overlay</li>
+                        <li>描边：4s 匀速旋转光泽 (Mask Border)</li>
+                    </ul>
+                </div>
+                <span class="text-secondary text-sm">悬停查看动效 ↑</span>
+            </div>
+
+            <!-- B. 基础提亮 -->
+            <div class="card-demo hover-container-base">
+                <h3 class="text-lg text-bright">基础提亮 (Basic)</h3>
+                <p class="card-meta">.hover-container-base</p>
+                <div class="card-rule">
+                    <p class="text-xs text-tertiary">交互效果：</p>
+                    <ul>
+                        <li>背景：无 → 5% 白色 Overlay</li>
+                        <li>无边框动效，纯净反馈</li>
+                    </ul>
+                </div>
+                <span class="text-secondary text-sm">悬停查看背景变化 ↑</span>
+            </div>
+
+            <!-- C. 纯文字 -->
+            <div class="card-demo hover-container-none">
+                <h3 class="text-lg text-bright">纯文字 (Text Only)</h3>
+                <p class="card-meta">.hover-container-none</p>
+                <div class="card-rule">
+                    <p class="text-xs text-tertiary">交互效果：</p>
+                    <ul>
+                        <li>背景：始终保持透明，不参与</li>
+                        <li>内部文字/图标自行产生提亮</li>
+                    </ul>
+                </div>
+                <span class="text-primary text-sm" style="cursor:pointer;">内部文字提亮演示 (80%→100%)</span>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ============================
+         2. 白色系文本交互
+    ============================= -->
+    <section class="showcase-section">
+        <div class="section-title">
+            <h2 class="text-xl">2. 文本交互 — 白色系 (Alpha Step-up)</h2>
+        </div>
+        <p class="section-desc">规则：Hover 时透明度提升一阶 (+20%)。适用于大多数可点击文本及图标。</p>
+
+        <table class="matrix-table">
+            <thead>
+                <tr>
+                    <th width="14%">层级</th>
+                    <th width="26%">Token / 规则</th>
+                    <th width="28%">静态参考 (Default → Hover)</th>
+                    <th width="32%">即时演示 (请悬停)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-base-strong">强文本</td>
+                    <td>
+                        <span class="dev-tag">--text-bright</span>
+                        <small>100% → 持平不升</small>
+                    </td>
+                    <td>
+                        <span class="color-swatch" style="background:#FFFFFF;"></span>100%
+                    </td>
+                    <td>
+                        <span class="text-bright" style="font-size:15px; cursor:pointer;">保持 100% 极亮白</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-base-strong">主正文</td>
+                    <td>
+                        <span class="dev-tag">--text-primary</span>
+                        <small>80% → 100%</small>
+                    </td>
+                    <td>
+                        <span class="color-swatch" style="background:rgba(255,255,255,0.8);"></span>80% → 100%
+                    </td>
+                    <td>
+                        <span class="text-primary" style="font-size:15px; cursor:pointer;">从 80% 升至 100%</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-base-strong">次级文</td>
+                    <td>
+                        <span class="dev-tag">--text-secondary</span>
+                        <small>60% → 80%</small>
+                    </td>
+                    <td>
+                        <span class="color-swatch" style="background:rgba(255,255,255,0.6);"></span>60% → 80%
+                    </td>
+                    <td>
+                        <span class="text-secondary" style="font-size:15px; cursor:pointer;">从 60% 升至 80%</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-base-strong">弱化文</td>
+                    <td>
+                        <span class="dev-tag">--text-tertiary</span>
+                        <small>40% → 60%</small>
+                    </td>
+                    <td>
+                        <span class="color-swatch" style="background:rgba(255,255,255,0.4);"></span>40% → 60%
+                    </td>
+                    <td>
+                        <span class="text-tertiary" style="font-size:15px; cursor:pointer;">从 40% 升至 60%</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-base-strong">幽灵态</td>
+                    <td>
+                        <span class="dev-tag">--text-ghost</span>
+                        <small>20% → 40%</small>
+                    </td>
+                    <td>
+                        <span class="color-swatch" style="background:rgba(255,255,255,0.2);"></span>20% → 40%
+                    </td>
+                    <td>
+                        <span class="text-ghost" style="font-size:15px; cursor:pointer;">从 20% 升至 40%</span>
+                    </td>
+                </tr>
+                <tr style="border-top: 1px solid rgba(64,158,255,0.2);">
+                    <td class="text-base-strong">蓝色链接</td>
+                    <td>
+                        <span class="dev-tag">#409EFF</span>
+                        <small>→ #66B1FF + 下划线</small>
+                    </td>
+                    <td>
+                        <span class="color-swatch" style="background:#409EFF;"></span>→
+                        <span class="color-swatch" style="background:#66B1FF;"></span>
+                    </td>
+                    <td>
+                        <a href="#" class="text-link-blue" style="font-size:15px; text-decoration:underline;">外部跳转链接演示</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+    <!-- ============================
+         3. 品牌系文本交互
+    ============================= -->
+    <section class="showcase-section">
+        <div class="section-title">
+            <h2 class="text-xl">3. 文本交互 — 品牌系 (Brand Colorize)</h2>
+        </div>
+        <p class="section-desc">规则：Hover 时激活品牌橙 #FF7210。适用于导航菜单、核心功能入口、主令按钮文字。</p>
+
+        <table class="matrix-table" style="border-color: rgba(255,114,16,0.15);">
+            <thead>
+                <tr>
+                    <th width="14%">类型</th>
+                    <th width="26%">实现类名</th>
+                    <th width="28%">默认状态</th>
+                    <th width="32%">即时演示 (请悬停)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="text-base-strong">品牌文本</td>
+                    <td><span class="dev-tag">.text-brand</span></td>
+                    <td><span style="color:#FF7210; font-size:15px;">品牌橙 #FF7210</span></td>
+                    <td><span class="text-brand" style="cursor:pointer; font-size:15px;">悬停变浅橙 #FF933B</span></td>
+                </tr>
+                <tr>
+                    <td class="text-base-strong">唤醒态</td>
+                    <td><span class="dev-tag">.hover-awaken</span></td>
+                    <td><span class="text-primary" style="font-size:15px;">80% 白色文本</span></td>
+                    <td>
+                        <span class="text-primary hover-awaken" style="cursor:pointer; font-size:15px; font-weight:700;">
+                            悬停唤醒品牌橙 <span class="awaken-badge">AWAKEN</span>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+</body>
+</html>

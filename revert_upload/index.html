@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PC-233 Button Design System</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    
+    <!-- Width Resizer & Settings Dashboard -->
+    <div style="max-width: 800px; margin: 0 auto; margin-bottom: 32px; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 12px; border: 1px solid rgba(255,255,255,0.05);">
+        <label style="color: #fff; font-size: 14px; font-weight: 500; display: flex; justify-content: space-between; margin-bottom: 12px;">
+            <span>Primary Button Width Tester</span>
+            <span id="widthValue" style="color: #ffe1bd; font-family: monospace;">Auto</span>
+        </label>
+        <input type="range" id="widthSlider" min="88" max="320" value="120" style="width: 100%; accent-color: #ff7210; cursor: ew-resize;">
+        
+        <div style="margin-top: 16px; display: flex; gap: 16px; align-items: center;">
+            <button onclick="resetWidth()" style="padding: 6px 12px; background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 4px; cursor: pointer; font-size: 12px;">
+                Reset to Auto
+            </button>
+            <label style="color: #fff; font-size: 13px; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                <input type="checkbox" id="iconToggle" style="accent-color: #ff7210; cursor: pointer;">
+                Show Icons
+            </label>
+        </div>
+    </div>
+    
+    <script>
+        const slider = document.getElementById('widthSlider');
+        const display = document.getElementById('widthValue');
+        
+        slider.addEventListener('input', (e) => {
+            const val = e.target.value + 'px';
+            display.textContent = val;
+            document.querySelectorAll('.btn').forEach(b => {
+                b.style.width = val;
+                b.style.justifyContent = 'center';
+            });
+        });
+
+        function resetWidth() {
+            display.textContent = 'Auto';
+            slider.value = 88;
+            document.querySelectorAll('.btn').forEach(b => {
+                b.style.width = 'auto';
+            });
+        }
+
+        document.getElementById('iconToggle').addEventListener('change', (e) => {
+            const displayMode = e.target.checked ? 'inline-flex' : 'none';
+            document.querySelectorAll('.icon-slot').forEach(slot => {
+                slot.style.display = displayMode;
+            });
+        });
+
+        document.addEventListener('mousemove', e => {
+            const btn = e.target.closest('.btn--secondary');
+            if (!btn) return;
+            const rect = btn.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            btn.style.setProperty('--mouse-x', `${x}px`);
+            btn.style.setProperty('--mouse-y', `${y}px`);
+        });
+    </script>
+
+    <div style="max-width: 1000px; margin: 0 auto;">
+        
+        <h2 style="color: white; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; margin-bottom: 24px; font-weight: 400;">主要 (Primary)</h2>
+        <table style="width: 100%; text-align: left; border-collapse: collapse; margin-bottom: 60px;">
+            <thead>
+                <tr style="color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                    <th style="padding-bottom: 16px; width: 140px; font-weight: normal;">Size Variant</th>
+                    <th style="padding-bottom: 16px; font-weight: normal;">Default / Interactive</th>
+                    <th style="padding-bottom: 16px; font-weight: normal;">Disabled Variant</th>
+                </tr>
+            </thead>
+            <tbody style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <!-- Large -->
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.02);">
+                    <td style="color: rgba(255,255,255,0.6); font-size: 14px;">Large <br><span style="color: #666; font-size: 12px;">H: 48px</span></td>
+                    <td style="padding: 24px 0;">
+                        <button class="btn btn--primary btn--lg">
+                            <span class="icon-slot" style="display: none;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11H3.5V12.5H12.5V11H14ZM8.75 8.939L11.47 6.22L12.53 7.28L8 11.81L3.47 7.28L4.53 6.22L7.25 8.939V2H8.75V8.939Z" /></svg></span>
+                            下载安装
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn--primary btn--lg" disabled>
+                            <span class="icon-slot" style="display: none;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11H3.5V12.5H12.5V11H14ZM8.75 8.939L11.47 6.22L12.53 7.28L8 11.81L3.47 7.28L4.53 6.22L7.25 8.939V2H8.75V8.939Z" /></svg></span>
+                            下载安装
+                        </button>
+                    </td>
+                </tr>
+                <!-- Medium -->
+                <tr style="border-bottom: 1px solid rgba(255,255,255,0.02);">
+                    <td style="color: rgba(255,255,255,0.6); font-size: 14px;">Medium <br><span style="color: #666; font-size: 12px;">H: 36px</span></td>
+                    <td style="padding: 24px 0;">
+                        <button class="btn btn--primary btn--md">
+                            <span class="icon-slot" style="display: none;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11H3.5V12.5H12.5V11H14ZM8.75 8.939L11.47 6.22L12.53 7.28L8 11.81L3.47 7.28L4.53 6.22L7.25 8.939V2H8.75V8.939Z" /></svg></span>
+                            下载安装
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn--primary btn--md" disabled>
+                            <span class="icon-slot" style="display: none;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11H3.5V12.5H12.5V11H14ZM8.75 8.939L11.47 6.22L12.53 7.28L8 11.81L3.47 7.28L4.53 6.22L7.25 8.939V2H8.75V8.939Z" /></svg></span>
+                            下载安装
+                        </button>
+                    </td>
+                </tr>
+                <!-- Small -->
+                <tr>
+                    <td style="color: rgba(255,255,255,0.6); font-size: 14px;">Small <br><span style="color: #666; font-size: 12px;">H: 28px</span></td>
+                    <td style="padding: 24px 0;">
+                        <button class="btn btn--primary btn--sm">
+                            <span class="icon-slot" style="display: none;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11H3.5V12.5H12.5V11H14ZM8.75 8.939L11.47 6.22L12.53 7.28L8 11.81L3.47 7.28L4.53 6.22L7.25 8.939V2H8.75V8.939Z" /></svg></span>
+                            下载安装
+                        </button>
+                    </td>
+                    <td>
+                        <button class="btn btn--primary btn--sm" disabled>
+                            <span class="icon-slot" style="display: none;"><svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11H3.5V12.5H12.5V11H14ZM8.75 8.939L11.47 6.22L12.53 7.28L8 11.81L3.47 7.28L4.53 6.22L7.25 8.939V2H8.75V8.939Z" /></svg></span>
+                            下载安装
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h2 style="color: rgba(255,255,255,0.5); border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 16px; margin-bottom: 24px; font-weight: 400; font-size: 18px;">Other System Variants</h2>
+        
+        <div id="other-variants-container"></div>
+
+        <script>
+            const svgIcon = '<svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><path d="M14 11V13C14 13.5523 13.5523 14 13 14H3C2.44772 14 2 13.5523 2 13V11H3.5V12.5H12.5V11H14ZM8.75 8.939L11.47 6.22L12.53 7.28L8 11.81L3.47 7.28L4.53 6.22L7.25 8.939V2H8.75V8.939Z" /></svg>';
+            
+            const variantConfigs = [
+                { title: '次要 (Secondary)', className: 'btn--secondary' },
+                { title: '线框主要 (Outline Primary)', className: 'btn--outline-primary' },
+                { title: '线框次要1 (Outline Sec 1)', className: 'btn--outline-secondary1' },
+                { title: '线框次要2 (Outline Sec 2)', className: 'btn--outline-secondary2' },
+                { title: '填充 (Fill)', className: 'btn--fill' },
+                { title: '文字 (Text)', className: 'btn--text' },
+                { title: '警示 (Warning)', className: 'btn--warning' }
+            ];
+
+            const sizeConfigs = [
+                { label: 'Large', subTitle: 'H: 48px', className: 'btn--lg' },
+                { label: 'Medium', subTitle: 'H: 36px', className: 'btn--md' },
+                { label: 'Small', subTitle: 'H: 28px', className: 'btn--sm' }
+            ];
+
+            const container = document.getElementById('other-variants-container');
+            const isIconChecked = document.getElementById('iconToggle').checked;
+            const iconDisplayMode = isIconChecked ? 'inline-flex' : 'none';
+
+            variantConfigs.forEach(variant => {
+                const tableHTML = `
+                    <h3 style="color: rgba(255,255,255,0.8); font-weight: 400; margin-bottom: 12px; margin-top: 40px; font-size: 15px;">${variant.title}</h3>
+                    <table style="width: 100%; text-align: left; border-collapse: collapse; margin-bottom: 24px;">
+                        <thead>
+                            <tr style="color: rgba(255,255,255,0.4); text-transform: uppercase; font-size: 13px; letter-spacing: 1px; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                                <th style="padding-bottom: 16px; width: 140px; font-weight: normal;">Size Variant</th>
+                                <th style="padding-bottom: 16px; font-weight: normal;">Default / Interactive</th>
+                                <th style="padding-bottom: 16px; font-weight: normal;">Disabled Variant</th>
+                            </tr>
+                        </thead>
+                        <tbody style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            ${sizeConfigs.map(size => `
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.02);">
+                                    <td style="color: rgba(255,255,255,0.6); font-size: 14px;">${size.label} <br><span style="color: #666; font-size: 12px;">${size.subTitle}</span></td>
+                                    <td style="padding: 24px 0;">
+                                        <button class="btn ${variant.className} ${size.className}">
+                                            <span class="icon-slot" style="display: ${iconDisplayMode};">${svgIcon}</span>下载安装
+                                        </button>
+                                    </td>
+                                    <td>
+                                        <button class="btn ${variant.className} ${size.className}" disabled>
+                                            <span class="icon-slot" style="display: ${iconDisplayMode};">${svgIcon}</span>下载安装
+                                        </button>
+                                    </td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+                container.insertAdjacentHTML('beforeend', tableHTML);
+            });
+        </script>
+
+    </div>
+
+</body>
+</html>

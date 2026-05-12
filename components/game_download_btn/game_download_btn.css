@@ -1,0 +1,681 @@
+/* components/game_download_btn/game_download_btn.css */
+.btn-progress {
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  width: 296px;
+  height: 48px;
+  border-radius: 4px;
+  background-color: var(--white-5, rgba(255, 255, 255, 0.05));
+  box-shadow: inset 0px 1px 4px 0px rgba(255, 255, 255, 0.15), inset 0px 0px 22px 0px rgba(255, 255, 255, 0.15);
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: var(--font-family-base, "Microsoft YaHei UI", sans-serif);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translate3d(0, 0, 0); /* Prevent text jitter on Windows */
+}
+
+.btn-progress::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 125px;
+  height: 100%;
+  background: radial-gradient(ellipse 77.54% 109.65% at 3.20% 92.71%, rgba(255, 114, 16, 0.20) 0%, rgba(255, 114, 16, 0) 100%);
+  z-index: 1;
+  pointer-events: none;
+  animation: breathe-opacity 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes breathe-opacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.btn-progress::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--white-white-45, rgba(255, 255, 255, 0.45)) 0%, var(--white-white-5, rgba(255, 255, 255, 0.05)) 100%);
+  -webkit-mask: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 296 48' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.25' y='0.25' width='295.5' height='47.5' rx='3.75' fill='none' stroke='black' stroke-width='0.5'/%3E%3C/svg%3E");
+  mask: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 296 48' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='0.25' y='0.25' width='295.5' height='47.5' rx='3.75' fill='none' stroke='black' stroke-width='0.5'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 4;
+}
+
+.btn-progress--paused::before,
+.btn-progress--installing::before,
+.btn-progress--completed::before,
+.btn-progress--complete-anim::before {
+  animation: none;
+  opacity: 0;
+}
+
+/* Removed Gradient Stroke since we are using border property now */
+
+.btn-progress:not(.btn-progress--completed):not(.btn-progress--complete-anim):not(.btn-progress--installing):hover {
+  background-color: var(--white-10, rgba(255, 255, 255, 0.1));
+}
+
+.btn-progress:not(.btn-progress--completed):not(.btn-progress--complete-anim):active {
+  background-color: rgba(255, 255, 255, 0.02);
+  box-shadow: inset 0px 1px 4px 0px rgba(255, 255, 255, 0.05);
+}
+
+.btn-progress__content {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  transition: filter 0.3s ease;
+}
+
+/* Icon Standardization */
+.btn-progress__icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+
+.btn-progress__icon-wrapper svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.btn-progress__text-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  padding-left: 8px;
+  padding-right: 16px;
+}
+
+.btn-progress__title {
+  font-size: 13px;
+  font-weight: bold;
+  color: var(--white-100, #ffffff);
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.btn-progress__size {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.size-current {
+  font-weight: bold;
+  color: var(--white-80, rgba(255, 255, 255, 0.8));
+}
+
+.size-divider {
+  font-weight: normal;
+  color: var(--white-60, rgba(255, 255, 255, 0.6));
+}
+
+.size-total {
+  font-weight: bold;
+  color: var(--white-60, rgba(255, 255, 255, 0.6));
+}
+
+/* Progress bar at the bottom */
+.btn-progress__bar-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.btn-progress__bar {
+  position: relative;
+  height: 100%;
+  background-color: var(--primary-6, #FF7210);
+  transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 0 0px 0px 0;
+  overflow: hidden;
+}
+
+.btn-progress--paused .btn-progress__bar::after,
+.btn-progress--completed .btn-progress__bar::after,
+.btn-progress--installing .btn-progress__bar::after {
+  display: none;
+}
+
+/* ==================================================
+   3-Layer Comet Animation
+   ================================================== */
+.btn-progress__comet-layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.btn-progress--complete-anim .btn-progress__comet-layer {
+  opacity: 1;
+}
+
+.comet-wrap {
+  position: absolute;
+  height: 100%;
+  width: 200%;
+  left: -100%;
+  top: 0;
+  will-change: transform;
+}
+
+.btn-progress--complete-anim .comet-wrap {
+  animation: comet-move 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Layer 1: Trailing Mist (Bottom layer, widest, most blur) */
+.comet-mist {
+  position: absolute;
+  height: 100%;
+  width: 120px;
+  right: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 114, 16, 0.3), transparent);
+  filter: blur(12px);
+  transform: skewX(-20deg);
+}
+
+/* Layer 2: Bloom (Middle layer, orange glow) */
+.comet-bloom {
+  position: absolute;
+  height: 100%;
+  width: 60px;
+  right: 30px;
+  background: radial-gradient(ellipse at center, rgba(255, 114, 16, 0.6) 0%, transparent 70%);
+  filter: blur(6px);
+}
+
+/* Layer 3: Core (Top layer, bright white center) */
+.comet-core {
+  position: absolute;
+  height: 100%;
+  width: 12px;
+  right: 54px;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  box-shadow: 0 0 15px #ffffff;
+  filter: blur(1px);
+}
+
+@keyframes comet-move {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(150%);
+  }
+}
+
+/* ==================================================
+   新方案过渡动效层 (New Transition Layers)
+   ================================================== */
+
+/* 方案 A: 能量液化 (Liquid Rise) */
+.btn-progress__liquid-fill {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+    background: linear-gradient(180deg, rgba(255, 149, 73, 0.8) 0%, #FF7210 100%);
+    z-index: 4;
+    pointer-events: none;
+    opacity: 0;
+    filter: blur(2px);
+}
+.btn-progress--liquid-anim .btn-progress__liquid-fill {
+    animation: liquid-rise 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes liquid-rise {
+    0% { height: 2px; opacity: 0.5; filter: blur(4px); }
+    30% { opacity: 1; filter: blur(2px); }
+    100% { height: 100%; opacity: 1; filter: blur(0px); }
+}
+
+/* 方案 B: 辉光扫掠 (Radiant Sweep) */
+.btn-progress__sweep-layer {
+    position: absolute;
+    inset: -20px; /* 扩展范围以覆盖模糊边缘 */
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(255, 255, 255, 0) 20%, 
+        rgba(255, 255, 255, 0.8) 50%, 
+        rgba(255, 255, 255, 0) 80%, 
+        transparent 100%);
+    z-index: 5;
+    transform: translateX(-100%) skewX(-25deg);
+    pointer-events: none;
+    opacity: 0;
+}
+.btn-progress--sweep-anim .btn-progress__sweep-layer {
+    animation: sweep-bright 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+@keyframes sweep-bright {
+    0% { transform: translateX(-120%) skewX(-25deg); opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { transform: translateX(150%) skewX(-25deg); opacity: 0; }
+}
+
+/* 方案 C: 中心聚变 (Core Expansion) */
+.btn-progress__burst-layer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    background: radial-gradient(circle, #ffffff 0%, #FFB17A 40%, #FF7210 70%, transparent 100%);
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    z-index: 5;
+    pointer-events: none;
+    filter: blur(4px);
+}
+.btn-progress--burst-anim .btn-progress__burst-layer {
+    animation: burst-out 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes burst-out {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
+    20% { opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(6); opacity: 0; }
+}
+
+/* ==================================================
+   Completion State (PC-233 HIFI Match)
+   Updated to match .btn-play style for consistency
+   ================================================== */
+.btn-progress--completed {
+  background: 
+    radial-gradient(ellipse 60% 100% at 50% 0%, rgba(255, 114, 16, 0.4) 0%, rgba(166, 61, 5, 0) 100%), 
+    rgba(166, 61, 5, 0.7);
+  box-shadow: 0px 8px 16px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 8px 0px rgba(255, 114, 16, 0.1);
+  border: none;
+}
+
+/* Update border highlight for completed state to match .btn-play::after */
+.btn-progress--completed::after {
+  background: 
+    radial-gradient(ellipse 30px 2px at 50% 0%, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, rgba(255, 223, 201, 0.5) 0%, rgba(255, 223, 201, 0.3) 100%);
+  opacity: 1;
+}
+
+.btn-progress--completed:hover {
+  background: 
+    radial-gradient(ellipse 60% 100% at 50% 0%, rgba(255, 114, 16, 0.75) 0%, rgba(166, 61, 5, 0) 100%), 
+    rgba(166, 61, 5, 0.85);
+  box-shadow: 0px 8px 16px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 8px 0px rgba(255, 114, 16, 0.1);
+}
+
+.btn-progress--completed .btn-progress__title {
+  color: var(--white-80, rgba(255, 255, 255, 0.8));
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 22px;
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-progress--completed:hover .btn-progress__title {
+  color: var(--white-100, #ffffff);
+}
+
+.btn-progress--completed:active {
+  background: 
+    radial-gradient(ellipse 50% 80% at 50% 0%, rgba(255, 114, 16, 0.2) 0%, rgba(166, 61, 5, 0) 100%), 
+    rgba(166, 61, 5, 0.6);
+  box-shadow: 0px 4px 12px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 4px 0px rgba(255, 114, 16, 0.05);
+}
+
+.btn-progress--completed:active .btn-progress__title {
+  color: var(--white-60, rgba(255, 255, 255, 0.6));
+}
+
+/* Layout adjustments for states */
+.btn-progress--installing .btn-progress__content,
+.btn-progress--completed .btn-progress__content,
+.btn-progress--liquid-anim .btn-progress__content,
+.btn-progress--sweep-anim .btn-progress__content,
+.btn-progress--burst-anim .btn-progress__content {
+  justify-content: center;
+  gap: 6px;
+}
+
+.btn-progress--installing .btn-progress__text-group,
+.btn-progress--completed .btn-progress__text-group,
+.btn-progress--liquid-anim .btn-progress__text-group,
+.btn-progress--sweep-anim .btn-progress__text-group,
+.btn-progress--burst-anim .btn-progress__text-group {
+  flex: none;
+  padding: 0;
+  justify-content: center;
+}
+
+.btn-progress--installing .btn-progress__bar-wrapper,
+.btn-progress--completed .btn-progress__bar-wrapper,
+.btn-progress--completed .btn-progress__size {
+  display: none;
+}
+
+/* Installing state: flat solid border (override gradient) */
+.btn-progress--installing::after {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Installing state: subtle inset shadow breathing */
+.btn-progress--installing {
+  cursor: default;
+  background-color: rgba(255, 255, 255, 0.02);
+  animation: installing-breathe 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes installing-breathe {
+  0% {
+    box-shadow:
+      inset 0px 1px 4px 0px rgba(255, 255, 255, 0.05),
+      inset 0px 0px 12px 0px rgba(255, 255, 255, 0.03);
+  }
+  100% {
+    box-shadow:
+      inset 0px 1px 4px 0px rgba(255, 255, 255, 0.15),
+      inset 0px 0px 24px 0px rgba(255, 255, 255, 0.08);
+  }
+}
+
+.btn-progress--completed .btn-progress__icon-wrapper {
+  display: flex;
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  transform: translateY(0.5px);
+}
+
+/* 开始游玩按钮 */
+.btn-play {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: 296px;
+  height: 48px;
+  border-radius: 4px;
+  background: 
+    radial-gradient(ellipse 60% 100% at 50% 0%, rgba(255, 114, 16, 0.4) 0%, rgba(166, 61, 5, 0) 100%), 
+    rgba(166, 61, 5, 0.7);
+  box-shadow: 0px 8px 16px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 8px 0px rgba(255, 114, 16, 0.1);
+  border: none;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-decoration: none;
+  font-family: var(--font-family-base, "Microsoft YaHei UI", sans-serif);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(-30px -30px -30px -30px); /* Align with 100% keyframe to prevent jump */
+  transform: translate3d(0, 0, 0); /* Prevent text jitter on Windows */
+}
+
+.btn-play::after {
+  content: ''; 
+  position: absolute; 
+  inset: 0; 
+  padding: 0.5px; 
+  border-radius: inherit;
+  background: 
+    radial-gradient(ellipse 30px 2px at 50% 0%, #ffffff 0%, rgba(255, 255, 255, 0) 100%),
+    linear-gradient(180deg, rgba(255, 223, 201, 0.5) 0%, rgba(255, 223, 201, 0.3) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor; 
+  mask-composite: exclude; 
+  pointer-events: none;
+  z-index: 4;
+}
+
+.btn-play__content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  z-index: 2;
+  position: relative;
+  transform: translate3d(0, 0, 0); /* Maintain GPU layer consistently */
+}
+
+.btn-play__icon-wrapper {
+  display: flex;
+  width: 16px;
+  height: 16px;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1/1;
+  transform: translateY(0.5px);
+}
+
+.btn-play__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.btn-play__text {
+  font-family: var(--font-family-base, "Microsoft YaHei UI", sans-serif);
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 22px;
+  color: var(--white-80, rgba(255, 255, 255, 0.8));
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.btn-play:hover {
+  background: 
+    radial-gradient(ellipse 60% 100% at 50% 0%, rgba(255, 114, 16, 0.75) 0%, rgba(166, 61, 5, 0) 100%), 
+    rgba(166, 61, 5, 0.85);
+  box-shadow: 0px 8px 16px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 8px 0px rgba(255, 114, 16, 0.1);
+}
+
+.btn-play:hover .btn-play__text {
+  color: var(--white-100, #ffffff);
+}
+
+.btn-play:active {
+  background: 
+    radial-gradient(ellipse 50% 80% at 50% 0%, rgba(255, 114, 16, 0.2) 0%, rgba(166, 61, 5, 0) 100%), 
+    rgba(166, 61, 5, 0.6);
+  box-shadow: 0px 4px 12px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 4px 0px rgba(255, 114, 16, 0.05);
+}
+
+.btn-play:active .btn-play__text {
+  color: var(--white-60, rgba(255, 255, 255, 0.6));
+}
+
+/* ==================================================
+   启动游戏状态 (Launch State)
+   ================================================== */
+.btn-play--launching {
+  pointer-events: none; /* 启动中禁用点击 */
+}
+
+/* 保持文字稳定 */
+.btn-play--launching .btn-play__text {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 启动中隐藏图标 */
+.btn-play--launching .btn-play__icon-wrapper {
+  display: none;
+}
+
+
+/* ==================================================
+   安装完成过渡动效 (Transition from Installing to Play)
+   ================================================== */
+.btn-transition-wrapper {
+  position: relative;
+  width: 296px;
+  height: 48px;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: visible;
+  
+  /* ==========================================
+     动画时间中控台 (Animation Timing Control)
+     ========================================== */
+  --anim-duration: 2.0s;                  /* 整体切换的总时间 */
+  --anim-ease: cubic-bezier(0.4, 0, 0.2, 1); /* 平滑的缓入缓出曲线，消除顿挫感 */
+}
+
+/* 按钮重叠布局 */
+.btn-transition-wrapper > .btn-progress,
+.btn-transition-wrapper > .btn-play {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: none;
+}
+
+/* 初始状态：安装中显示，开始游戏隐藏 */
+.btn-transition-wrapper .btn-play {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 1. 整体容器状态 */
+.btn-transition-wrapper.is-transitioning {
+  pointer-events: none; /* 动画期间禁止点击 */
+}
+
+/* 动画期间禁用所有默认 transition，防止与 keyframes 冲突导致重绘卡顿 */
+.btn-transition-wrapper.is-transitioning * {
+  transition: none !important;
+}
+
+/* ==================================================
+   新版无缝光效填充动画 (Seamless Light Fill Transition)
+   分三阶段:
+   1. 辉光汇聚 (Glow Gather)
+   2. 顶部倾泻填充 (Pour Down Fill)
+   3. 内容浮现衔接 (Content Emerge)
+   ================================================== */
+
+/* ==================================================
+   最新方案：从上到下填充 + 内阴影辉光扩展 (Top-to-Bottom Fill + Inner Glow)
+   ================================================== */
+.btn-transition-wrapper.is-transitioning .btn-progress {
+  will-change: transform, clip-path;
+  animation: progress-wipe-down var(--anim-duration) var(--anim-ease) forwards;
+}
+@keyframes progress-wipe-down {
+  0% { 
+    clip-path: inset(-30px -30px -30px -30px); 
+  }
+  60% { 
+    clip-path: inset(100% -30px -30px -30px); 
+  }
+  100% { 
+    clip-path: inset(100% -30px -30px -30px); 
+  }
+}
+
+.btn-transition-wrapper.is-transitioning .btn-play {
+  opacity: 1; /* 必须为1以保证裁剪区域可见 */
+  pointer-events: none;
+  will-change: transform, clip-path, box-shadow;
+  animation: play-fill-down var(--anim-duration) var(--anim-ease) forwards;
+}
+
+/* 添加一个高亮纯色遮罩，在填充时保持明亮，随后自然过渡到最终的深色背景 */
+.btn-transition-wrapper.is-transitioning .btn-play::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #FF7210; /* 高亮橙色 */
+  z-index: 1;
+  pointer-events: none;
+  border-radius: 4px;
+  animation: play-bright-fade var(--anim-duration) var(--anim-ease) forwards;
+}
+
+@keyframes play-bright-fade {
+  0% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+@keyframes play-fill-down {
+  0% { 
+    clip-path: inset(-30px -30px 100% -30px); 
+    box-shadow: 0px 0px 0px 0px rgba(166, 61, 5, 0), inset 0px 0px 0px 0px rgba(255, 114, 16, 0); 
+  }
+  60% {
+    clip-path: inset(-30px -30px -30px -30px); 
+    box-shadow: 0px 0px 0px 0px rgba(166, 61, 5, 0), inset 0px 0px 0px 0px rgba(255, 114, 16, 0); 
+  }
+  100% { 
+    clip-path: inset(-30px -30px -30px -30px); 
+    /* 直接渐变到最终形态：标准的阴影和光感，不再呼吸扩张 */
+    box-shadow: 0px 8px 16px 0px rgba(166, 61, 5, 0.3), inset 0px 0px 8px 0px rgba(255, 114, 16, 0.1);
+  }
+}
+
+/* 文字与图标的滑入浮现，去除blur防止抗锯齿闪烁 */
+.btn-transition-wrapper.is-transitioning .btn-play__content {
+  animation: text-slide-up var(--anim-duration) var(--anim-ease) forwards;
+}
+@keyframes text-slide-up {
+  0% { transform: translate3d(0, 8px, 0); }
+  60% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+
+/* ==================================================
+   动画完成，彻底切换状态
+   ================================================== */
+.btn-transition-wrapper.is-completed .btn-progress {
+  display: none;
+}
+.btn-transition-wrapper.is-completed .btn-play {
+  opacity: 1;
+  pointer-events: auto;
+}
